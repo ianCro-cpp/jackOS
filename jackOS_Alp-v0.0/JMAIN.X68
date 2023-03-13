@@ -36,7 +36,7 @@ RxEn    EQU     $01     ;Enable Rx
 RxDs    EQU     $02     ;Disable Rx
 TxEn    EQU     $04     ;Enable Tx
 TxDs    EQU     $08     ;Disable Tx
-MRRst   EQU     $10     /Reset MRA/MRB Pointer
+MRRst   EQU     $10     ;Reset MRA/MRB Pointer
 RxRst   EQU     $20     ;Reset Rx
 TxRst   EQU     $30     ;Reset Tx
 BAUD_RATE   EQU     $CC    ;Baud Rate = 19.2K Baud = 2400 bytes/second
