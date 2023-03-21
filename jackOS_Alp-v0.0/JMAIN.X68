@@ -74,15 +74,14 @@ BANNER:
 MENU:
     DC.B    CR,LF,'     COMMANDS [1-6]:'
     DC.B    CR,LF,'         *[1] - Display Registers'
-    DC.B    CR,LF,'         *[2] - Display Registers'
-    DC.B    CR,LF,'         *[3] - Display Registers'
-    DC.B    CR,LF,'         *[4] - Display Registers'
-    DC.B    CR,LF,'         *[5] - Display Registers'
-    DC.B    CR,LF,'         *[6] - Display Registers'
+    DC.B    CR,LF,'         *[2] - Write Registers'
+    DC.B    CR,LF,'         *[3] - Display Memory'
+    DC.B    CR,LF,'         *[4] - Write Memory'
+    DC.B    CR,LF,'         *[5] - Load S-Record over Serial'
+    DC.B    CR,LF,'         *[6] - Run S-Record'
+
+MAINLOOP:
+    
     END    MONITOR        ; last line of source
 
 
-*~Font name~Courier New~
-*~Font size~10~
-*~Tab type~1~
-*~Tab size~4~
