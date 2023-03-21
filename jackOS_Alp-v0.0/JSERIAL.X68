@@ -107,7 +107,26 @@ GETCHAR:
           JSR         .EXIT
 .GRABA    MOVE.B      HRA(A0),D1
 .EXIT     RTS
-    
+
+* PUTSTR: print string in memory. string terminated by $04 (ASCII End of Transmission)
+* arguments: address of first character in D0
+* return: no values
+PUTSTR:     MOVE.L (D0), -(SP) ; SAVE ON STACK. string pointer (argument)
+            MOVE.L D1, -(SP) ; SAVE ON STACK. temp string pointer
+            
+            MOVE.L D0, D1 ; move pointer to d1 (since d0 needed to call PUTCHAR)
+            
+.1CHAR      MOVE.L (D1), D0 ; load character from string to d0
+            CMPI #$04, D0 ; char is $04?
+            BEQ .PSTREXIT ; if yes, we're done
+            BSR PUTCHAR ; print the character
+            ADDI #$1, D1 ; move up pointer by 1
+            BRA .1CHAR ; and repeat print
+            
+.PSTREXIT   MOVE.L (SP)+, D1 ; RESTORE FROM STACK. temp string pointer
+            MOVE.L (SP)+, (D0) ; RESTORE FROM STACK. string pointer (argument)
+            RTS
+
     
 *---------------------------
 *     OUTPUT SUBROUTINES
