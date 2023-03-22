@@ -86,11 +86,12 @@ MENU:
 MAINLOOP:
     bsr GETCHAR
     
-    cmpi #$31, D1
+    cmpi #$1, D1
     bsr REGDISP
     
     
     END    MONITOR        ; last line of source
+
 
 
 

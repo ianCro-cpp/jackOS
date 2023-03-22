@@ -1,6 +1,6 @@
 00001000 Starting Address
 Assembler used: EASy68K Editor/Assembler v5.16.01
-Created On: 3/21/2023 7:22:17 PM
+Created On: 3/21/2023 7:38:52 PM
 
 00000000                             1  *-----------------------------------------------------------
 00000000                             2  * Title      : jackOS Alpha v0.0
@@ -276,7 +276,7 @@ Created On: 3/21/2023 7:22:17 PM
 00001000                           272  MAINLOOP:
 00001000  6100 044C                273      bsr GETCHAR
 00001004                           274      
-00001004  0C41 0031                275      cmpi #$31, D1
+00001004  0C41 0001                275      cmpi #$1, D1
 00001008  61F6                     276      bsr REGDISP
 0000100A                           277      
 0000100A                           278      
