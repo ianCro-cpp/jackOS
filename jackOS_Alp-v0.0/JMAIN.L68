@@ -1,6 +1,6 @@
 00001000 Starting Address
 Assembler used: EASy68K Editor/Assembler v5.16.01
-Created On: 3/21/2023 7:22:17 PM
+Created On: 3/22/2023 9:34:49 AM
 
 00000000                             1  *-----------------------------------------------------------
 00000000                             2  * Title      : jackOS Alpha v0.0
@@ -146,9 +146,9 @@ Created On: 3/21/2023 7:22:17 PM
 00001414  2F01                     142              MOVE.L      D1,-(SP)
 00001416  1200                     143              MOVE.B      D0,D1
 00001418                 TRUE      144              IFNE SIM
-00001418  307C 0006                145                  MOVE    #06,A0
-0000141C  4E4F                     146                  TRAP    #15
-0000141E  6000 0028                147                  BRA     .EXIT
+00001418  307C 0006                145              MOVE    #06,A0
+0000141C  4E4F                     146              TRAP    #15
+0000141E  6000 0028                147              BRA     .EXIT
 00001422                           148              ENDC
 00001422  41F9 00020000            149              LEA     DUART,A0
 00001428  0828 0002 0003           150  .WAITA      BTST    #Tx_Rdy, SRA(A0)
@@ -160,127 +160,129 @@ Created On: 3/21/2023 7:22:17 PM
 00001444  1141 0007                156  .MOVEA      MOVE.B  D1,HRA(A0)
 00001448  221F                     157  .EXIT       MOVE.L  (SP)+,D1
 0000144A  201F                     158              MOVE.L  (SP)+,D0
-0000144C  4E75                     159              RTS
+0000144C  4E75                     159  .RET        RTS
 0000144E                           160              
 0000144E                           161  GETCHAR:
 0000144E  2F01                     162      MOVE.L      D1,-(SP)
 00001450  1200                     163      MOVE.B      D0,D1
 00001452  4DF9 00010000            164      LEA         DATA,A6
-00001458                 TRUE      165     IFNE SIM
-00001458  7005                     166      MOVE.L      #05,D0
-0000145A  4E4F                     167      TRAP        #15
-0000145C                           168     ENDC
-0000145C  0828 0000 0003           169  .WAITA    BTST        #Rx_Rdy,SRA(A0)
-00001462  6D00 0014                170            BLT         .GRABA
-00001466  0828 0000 0013           171  .WAITB    BTST        #Rx_Rdy,SRB(A0)
-0000146C  67EE                     172            BEQ         .WAITA
-0000146E  1228 0017                173  .GRABB    MOVE.B      HRB(A0),D1
-00001472  4EB9 0000147C            174            JSR         .EXIT
-00001478  1228 0007                175  .GRABA    MOVE.B      HRA(A0),D1
-0000147C  4E75                     176  .EXIT     RTS
-0000147E                           177  
-0000147E  2F00                     178  PUTSTR:     MOVE.L D0,-(SP) ; SAVE ON STACK. string pointer (argument)
-00001480  2F01                     179              MOVE.L D1, -(SP) ; SAVE ON STACK. temp string pointer
-00001482                           180              
-00001482  2200                     181              MOVE.L D0, D1 ; move pointer to d1 (since d0 needed to call PUTCHAR)
-00001484                           182              
-00001484  2001                     183  .1CHAR      MOVE.L D1, D0 ; load character from string to d0
-00001486  0C40 0004                184              CMPI #$04, D0 ; char is $04?
-0000148A  6700 0008                185              BEQ .PSTREXIT ; if yes, we're done
-0000148E  6182                     186              BSR PUTCHAR ; print the character
-00001490  5241                     187              ADDI #$1, D1 ; move up pointer by 1
-00001492  60F0                     188              BRA .1CHAR ; and repeat print
-00001494                           189              
-00001494  221F                     190  .PSTREXIT   MOVE.L (SP)+, D1 ; RESTORE FROM STACK. temp string pointer
-00001496  201F                     191              MOVE.L (SP)+, D0 ; RESTORE FROM STACK. string pointer (argument)
-00001498  4E75                     192              RTS
-0000149A                           193  
-0000149A                           194      
-0000149A  1F00                     195  OUT1X:  MOVE.B  D0,-(SP)    ;
-0000149C  C23C 000F                196          AND.B   #$0F,D1     ;
-000014A0  0601 0030                197          ADD.B   #$30,D1
-000014A4  B23C 0039                198          CMP.B   #$39,D1
-000014A8  6302                     199          BLS.S   OUT1X1
-000014AA  5E01                     200          ADD.B   #$07,D1
-000014AC                           201          
-000014AC  6100 FF64                202  OUT1X1: BSR     PUTCHAR
-000014B0  121F                     203          MOVE.B  (SP)+,D1
-000014B2  4E75                     204          RTS
-000014B4                           205          
-000014B4  E819                     206  OUT2X:  ROR.B   #4,D1
-000014B6  61E2                     207          BSR     OUT1X
-000014B8  E919                     208          ROL.B   #4,D1
-000014BA  60DE                     209          BRA     OUT1X
-000014BC                           210          
-000014BC  E059                     211  OUT4X:   ROR.W   #8,D1
-000014BE  61F4                     212          BSR     OUT2X
-000014C0  E159                     213          ROL.W   #8,D1
-000014C2  60F0                     214          BRA     OUT2X
-000014C4                           215          
-000014C4  4841                     216  OUT8X:   SWAP    D1
-000014C6  61F4                     217          BSR     OUT4X
-000014C8  4841                     218          SWAP    D1
-000014CA  60F0                     219          BRA     OUT4X
-000014CC                           220   
-000014CC  6180                     221  HEX:    BSR     GETCHAR
-000014CE  0400 0030                222          SUB.B   #$30,D0
-000014D2  6B0E                     223          BMI.S   NOT_HEX
-000014D4  B03C 0009                224          CMP.B   #$09,D0
-000014D8  6F0C                     225          BLE.S   HEX_OK
-000014DA  5F00                     226          SUB.B   #$07,D0
-000014DC  B03C 000F                227          CMP.B   #$0F,D0
-000014E0  6F04                     228          BLE.S   HEX_OK
-000014E2                           229          
-000014E2  8E3C 0001                230  NOT_HEX OR.B    #1,D7
-000014E6                           231  
-000014E6  4E75                     232  HEX_OK  RTS
-000014E8                           233  
-000014E8  2F01                     234  BYTE:   MOVE.L  D1,-(SP)
-000014EA  61E0                     235          BSR     HEX
-000014EC  E900                     236          ASL.B   #4,D0
-000014EE  1200                     237          MOVE.B  D0,D1
-000014F0  61DA                     238          BSR     HEX
-000014F2  D001                     239          ADD.B   D1,D0
-000014F4  221F                     240          MOVE.L  (SP)+,D1
-000014F6  4E75                     241          RTS
-000014F8                           242  
-000014F8  61EE                     243  WORD    BSR     BYTE
-000014FA  E140                     244          ASL.W   #8,D0
-000014FC  60EA                     245          BRA     BYTE
-000014FE                           246          
-000014FE  61F8                     247  LONGWD  BSR     WORD
-00001500  4840                     248          SWAP    D0
-00001502  60F4                     249          BRA     WORD
-00001504                           250         
-00001504                           251  
-00001504                           252  
-00001504                           253  
-00001504                           254  
-00001504                           255  
-00001504                           256  -------------------- end include --------------------
-00001504                           257      INCLUDE "JCOMMANDS.X68"
-00001000                           258      ORG    $1000
-00001000                           259  START:                  ; first instruction of program
-00001000                           260  
-00001000                           261  REGDISP:
-00001000                           262  REGMOD:
-00001000                           263  
-00001000                           264  MEMDISP:
-00001000                           265  MEMMOD:
-00001000                           266  
-00001000                           267  LOADSREC:
-00001000                           268  RUNSREC:
-00001000                           269  
-00001000                           270  -------------------- end include --------------------
+00001458                 TRUE      165      IFNE SIM
+00001458  103C 0005                166      MOVE.B      #5,D0
+0000145C  4E4F                     167      TRAP        #15
+0000145E  6000 0022                168      BRA         .EXIT
+00001462                           169      ENDC
+00001462  0828 0000 0003           170  .WAITA    BTST        #Rx_Rdy,SRA(A0)
+00001468  6D00 0014                171            BLT         .GRABA
+0000146C  0828 0000 0013           172  .WAITB    BTST        #Rx_Rdy,SRB(A0)
+00001472  67EE                     173            BEQ         .WAITA
+00001474  1228 0017                174  .GRABB    MOVE.B      HRB(A0),D1
+00001478  4EB9 00001482            175            JSR         .EXIT
+0000147E  1228 0007                176  .GRABA    MOVE.B      HRA(A0),D1
+00001482  4E75                     177  .EXIT     RTS
+00001484                           178  
+00001484  2F00                     179  PUTSTR:     MOVE.L D0,-(SP) ; SAVE ON STACK. string pointer (argument)
+00001486  2F01                     180              MOVE.L D1, -(SP) ; SAVE ON STACK. temp string pointer
+00001488                           181              
+00001488  2200                     182              MOVE.L D0, D1 ; move pointer to d1 (since d0 needed to call PUTCHAR)
+0000148A                           183              
+0000148A  2001                     184  .1CHAR      MOVE.L D1, D0 ; load character from string to d0
+0000148C  0C40 0004                185              CMPI #$04, D0 ; char is $04?
+00001490  6700 000A                186              BEQ .PSTREXIT ; if yes, we're done
+00001494  6100 FF7C                187              BSR PUTCHAR ; print the character
+00001498  5241                     188              ADDI #$1, D1 ; move up pointer by 1
+0000149A  60EE                     189              BRA .1CHAR ; and repeat print
+0000149C                           190              
+0000149C  221F                     191  .PSTREXIT   MOVE.L (SP)+, D1 ; RESTORE FROM STACK. temp string pointer
+0000149E  201F                     192              MOVE.L (SP)+, D0 ; RESTORE FROM STACK. string pointer (argument)
+000014A0  4E75                     193              RTS
+000014A2                           194  
+000014A2                           195      
+000014A2  1F00                     196  OUT1X:  MOVE.B  D0,-(SP)    ;
+000014A4  C23C 000F                197          AND.B   #$0F,D1     ;
+000014A8  0601 0030                198          ADD.B   #$30,D1
+000014AC  B23C 0039                199          CMP.B   #$39,D1
+000014B0  6302                     200          BLS.S   OUT1X1
+000014B2  5E01                     201          ADD.B   #$07,D1
+000014B4                           202          
+000014B4  6100 FF5C                203  OUT1X1: BSR     PUTCHAR
+000014B8  121F                     204          MOVE.B  (SP)+,D1
+000014BA  4E75                     205          RTS
+000014BC                           206          
+000014BC  E819                     207  OUT2X:  ROR.B   #4,D1
+000014BE  61E2                     208          BSR     OUT1X
+000014C0  E919                     209          ROL.B   #4,D1
+000014C2  60DE                     210          BRA     OUT1X
+000014C4                           211          
+000014C4  E059                     212  OUT4X:   ROR.W   #8,D1
+000014C6  61F4                     213          BSR     OUT2X
+000014C8  E159                     214          ROL.W   #8,D1
+000014CA  60F0                     215          BRA     OUT2X
+000014CC                           216          
+000014CC  4841                     217  OUT8X:   SWAP    D1
+000014CE  61F4                     218          BSR     OUT4X
+000014D0  4841                     219          SWAP    D1
+000014D2  60F0                     220          BRA     OUT4X
+000014D4                           221   
+000014D4  6100 FF78                222  HEX:    BSR     GETCHAR
+000014D8  0400 0030                223          SUB.B   #$30,D0
+000014DC  6B0E                     224          BMI.S   NOT_HEX
+000014DE  B03C 0009                225          CMP.B   #$09,D0
+000014E2  6F0C                     226          BLE.S   HEX_OK
+000014E4  5F00                     227          SUB.B   #$07,D0
+000014E6  B03C 000F                228          CMP.B   #$0F,D0
+000014EA  6F04                     229          BLE.S   HEX_OK
+000014EC                           230          
+000014EC  8E3C 0001                231  NOT_HEX OR.B    #1,D7
+000014F0                           232  
+000014F0  4E75                     233  HEX_OK  RTS
+000014F2                           234  
+000014F2  2F01                     235  BYTE:   MOVE.L  D1,-(SP)
+000014F4  61DE                     236          BSR     HEX
+000014F6  E900                     237          ASL.B   #4,D0
+000014F8  1200                     238          MOVE.B  D0,D1
+000014FA  61D8                     239          BSR     HEX
+000014FC  D001                     240          ADD.B   D1,D0
+000014FE  221F                     241          MOVE.L  (SP)+,D1
+00001500  4E75                     242          RTS
+00001502                           243  
+00001502  61EE                     244  WORD    BSR     BYTE
+00001504  E140                     245          ASL.W   #8,D0
+00001506  60EA                     246          BRA     BYTE
+00001508                           247          
+00001508  61F8                     248  LONGWD  BSR     WORD
+0000150A  4840                     249          SWAP    D0
+0000150C  60F4                     250          BRA     WORD
+0000150E                           251         
+0000150E                           252  
+0000150E                           253  
+0000150E                           254  
+0000150E                           255  
+0000150E                           256  
+0000150E                           257  
+0000150E                           258  -------------------- end include --------------------
+0000150E                           259      INCLUDE "JCOMMANDS.X68"
+00001000                           260      ORG    $1000
+00001000                           261  START:                  ; first instruction of program
+00001000                           262  
+00001000                           263  REGDISP:
+00001000                           264  REGMOD:
+00001000                           265  
+00001000                           266  MEMDISP:
+00001000                           267  MEMMOD:
+00001000                           268  
+00001000                           269  LOADSREC:
+00001000                           270  RUNSREC:
 00001000                           271  
-00001000                           272  MAINLOOP:
-00001000  6100 044C                273      bsr GETCHAR
-00001004                           274      
-00001004  0C41 0031                275      cmpi #$31, D1
-00001008  61F6                     276      bsr REGDISP
-0000100A                           277      
-0000100A                           278      
-0000100A                           279      END    MONITOR        ; last line of source
+00001000                           272  -------------------- end include --------------------
+00001000                           273  
+00001000                           274  MAINLOOP:
+00001000  6100 044C                275      bsr GETCHAR
+00001004                           276      
+00001004  0C41 0031                277      cmpi #$31, D1
+00001008  61F6                     278      bsr REGDISP
+0000100A                           279      
+0000100A                           280      
+0000100A                           281      END    MONITOR        ; last line of source
 
 No errors detected
 No warnings generated
@@ -293,7 +295,7 @@ ACR                 9
 BANNER              1000
 BAUD_RATE           CC
 BS                  8
-BYTE                14E8
+BYTE                14F2
 CR                  D
 CRA                 5
 CRB                 15
@@ -306,19 +308,19 @@ DUART               20000
 EOT                 4
 ESC                 1B
 GETCHAR             144E
-GETCHAR:EXIT        147C
-GETCHAR:GRABA       1478
-GETCHAR:GRABB       146E
-GETCHAR:WAITA       145C
-GETCHAR:WAITB       1466
-HEX                 14CC
-HEX_OK              14E6
+GETCHAR:EXIT        1482
+GETCHAR:GRABA       147E
+GETCHAR:GRABB       1474
+GETCHAR:WAITA       1462
+GETCHAR:WAITB       146C
+HEX                 14D4
+HEX_OK              14F0
 HRA                 7
 HRB                 17
 INIT_DUART          13B2
 LF                  A
 LOADSREC            1000
-LONGWD              14FE
+LONGWD              1508
 MAINLOOP            1000
 MEMDISP             1000
 MEMMOD              1000
@@ -331,22 +333,23 @@ MR2B                11
 MRA                 1
 MRB                 11
 MRRST               10
-NOT_HEX             14E2
+NOT_HEX             14EC
 NULL                0
-OUT1X               149A
-OUT1X1              14AC
-OUT2X               14B4
-OUT4X               14BC
-OUT8X               14C4
+OUT1X               14A2
+OUT1X1              14B4
+OUT2X               14BC
+OUT4X               14C4
+OUT8X               14CC
 PUTCHAR             1412
 PUTCHAR:EXIT        1448
 PUTCHAR:MOVEA       1444
 PUTCHAR:MOVEB       143A
+PUTCHAR:RET         144C
 PUTCHAR:WAITA       1428
 PUTCHAR:WAITB       1432
-PUTSTR              147E
-PUTSTR:1CHAR        1484
-PUTSTR:PSTREXIT     1494
+PUTSTR              1484
+PUTSTR:1CHAR        148A
+PUTSTR:PSTREXIT     149C
 RAM                 0
 REGDISP             1000
 REGMOD              1000
@@ -366,4 +369,4 @@ TXEN                4
 TXRST               30
 TX_RDY              2
 WAIT                57
-WORD                14F8
+WORD                1502

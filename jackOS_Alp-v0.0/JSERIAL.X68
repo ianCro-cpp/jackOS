@@ -75,9 +75,9 @@ PUTCHAR:    MOVE.L      D0,-(SP)
             MOVE.L      D1,-(SP)
             MOVE.B      D0,D1
             IFNE SIM
-                MOVE    #06,A0
-                TRAP    #15
-                BRA     .EXIT
+            MOVE    #06,A0
+            TRAP    #15
+            BRA     .EXIT
             ENDC
             LEA     DUART,A0
 .WAITA      BTST    #Tx_Rdy, SRA(A0)
@@ -89,16 +89,17 @@ PUTCHAR:    MOVE.L      D0,-(SP)
 .MOVEA      MOVE.B  D1,HRA(A0)
 .EXIT       MOVE.L  (SP)+,D1
             MOVE.L  (SP)+,D0
-            RTS
+.RET        RTS
             
 GETCHAR:
     MOVE.L      D1,-(SP)
     MOVE.B      D0,D1
     LEA         DATA,A6
-   IFNE SIM
-    MOVE.L      #05,D0
+    IFNE SIM
+    MOVE.B      #5,D0
     TRAP        #15
-   ENDC
+    BRA         .EXIT
+    ENDC
 .WAITA    BTST        #Rx_Rdy,SRA(A0)
           BLT         .GRABA
 .WAITB    BTST        #Rx_Rdy,SRB(A0)
@@ -201,6 +202,7 @@ LONGWD  BSR     WORD
         SWAP    D0
         BRA     WORD
        
+
 
 
 
