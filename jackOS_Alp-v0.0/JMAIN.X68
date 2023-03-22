@@ -48,7 +48,7 @@ MONITOR:                  ; first instruction of program
 
 * Put program code here
 
-    SIMHALT             ; halt simulator
+
 
 * Put variables and constants here
 
@@ -81,14 +81,18 @@ MENU:
     DC.B    CR,LF,'         *[6] - Run S-Record'
 
     INCLUDE "JSERIAL.X68"
+    INCLUDE "JCOMMANDS.X68"
 
 MAINLOOP:
     bsr GETCHAR
     
-    cmpi D1, #$31
+    cmpi #$31, D1
+    bsr REGDISP
     
     
     END    MONITOR        ; last line of source
+
+
 
 
 
