@@ -1,0 +1,348 @@
+00001000 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.16.01
+Created On: 3/21/2023 7:03:02 PM
+
+00000000                             1  *-----------------------------------------------------------
+00000000                             2  * Title      : jackOS Alpha v0.0
+00000000                             3  * Written by : Ian C. Crochet, Zachary Stewart
+00000000                             4  * Date       : March 7, 2023
+00000000                             5  * Description: jackOS Av0.0 is a simple interactive 'toy-box' system that
+00000000                             6  *              utilizes the EASy68K Fast Floating Point library for three simple games:
+00000000                             7  *              - Hammurabi (based upon Doug Dyment's text-based BASIC game in 1968)
+00000000                             8  *              - Interactive Unit Circle
+00000000                             9  *              - 68Karnage: a basic first-person ray tracing demo
+00000000                            10  *-----------------------------------------------------------
+00000000                            11  * Component Allocation
+00000000  =00000000                 12  RAM     EQU     $000000
+00000000  =00010000                 13  ROM     EQU     $010000
+00000000  =00020000                 14  DUART   EQU     $020000
+00000000                            15  
+00000000                            16  * Device Addresses
+00000000                            17  * DUART Offsets
+00000000                            18  *   Channel A
+00000000  =00000001                 19  MRA     EQU      $01    ;Mode Register A (Read and Write Mode)
+00000000  =00000003                 20  SRA     EQU      $03    ;Status Register A (Read Mode)
+00000000  =00000003                 21  CSRA    EQU      $03    ;Clock Select Register A (Write Mode)
+00000000  =00000005                 22  CRA     EQU      $05    ;Command Register A (Write Mode)
+00000000  =00000007                 23  HRA     EQU      $07    ;Holding Register A (Tx and Rx)
+00000000                            24  *   Channel B
+00000000  =00000011                 25  MRB     EQU      $11    ;Mode Register B (Read and Write Mode)
+00000000  =00000013                 26  SRB     EQU      $13    ;Status Register B (Read Mode)
+00000000  =00000013                 27  CSRB    EQU      $13    ;Clock Select Register B (Write Mode)
+00000000  =00000015                 28  CRB     EQU      $15    ;Command Register B (Write Mode)
+00000000  =00000017                 29  HRB     EQU      $17    ;Holding Register B (Tx and Rx)
+00000000                            30  *   General DUART Control
+00000000  =00000009                 31  ACR     EQU     $09     ;Auxilary Control Register
+00000000  =0000000D                 32  CTU     EQU     $0D     ;Counter/Timer Upper Byte Register 
+00000000  =0000000F                 33  CTL     EQU     $0F     ;Counter/Timer Lower Byte Register
+00000000                            34  * DUART Command Register Values
+00000000  =00000001                 35  RxEn    EQU     $01     ;Enable Rx
+00000000  =00000002                 36  RxDs    EQU     $02     ;Disable Rx
+00000000  =00000004                 37  TxEn    EQU     $04     ;Enable Tx
+00000000  =00000008                 38  TxDs    EQU     $08     ;Disable Tx
+00000000  =00000010                 39  MRRst   EQU     $10     ;Reset MRA/MRB Pointer
+00000000  =00000020                 40  RxRst   EQU     $20     ;Reset Rx
+00000000  =00000030                 41  TxRst   EQU     $30     ;Reset Tx
+00000000  =000000CC                 42  BAUD_RATE   EQU     $CC    ;Baud Rate = 19.2K Baud = 2400 bytes/second
+00000000                            43  
+00000000                            44      ORG    $0000
+00000000                            45      
+00001000                            46      ORG    $1000
+00001000                            47  MONITOR:                  ; first instruction of program
+00001000                            48  
+00001000                            49  * Put program code here
+00001000                            50  
+00001000  FFFF FFFF                 51      SIMHALT             ; halt simulator
+00001004                            52  
+00001004                            53  * Put variables and constants here
+00001004                            54  
+00001004                            55  * ASCII Symbols
+00001004  =00000000                 56  NULL    EQU     $00     ;Null
+00001004  =00000008                 57  BS      EQU     $08     ;Backspace
+00001004  =0000000D                 58  CR      EQU     $0D     ;Carriage Return
+00001004  =0000000A                 59  LF      EQU     $0A     ;Line Feed
+00001004  =00000020                 60  SPACE   EQU     $20     ;Space
+00001004  =00000057                 61  WAIT    EQU     'W'     ;Wait Character
+00001004  =0000001B                 62  ESC     EQU     $1B     ;Escape Key
+00001004  =00000004                 63  EOT     EQU     $04     ;End of Transmission
+00001004                            64  BANNER:
+00001004= 0D 0A 20 20 20 20 ...     65      DC.B    CR,LF,'             ___   ________   ________   ___  __     ________   ________      '
+00001054= 0D 0A 20 20 20 20 ...     66      DC.B    CR,LF,'            |\  \ |\   __  \ |\   ____\ |\  \|\  \  |\   __  \ |\   ____\     '
+000010A4= 0D 0A 20 20 20 20 ...     67      DC.B    CR,LF,'            \ \  \\ \  \|\  \\ \  \___| \ \  \/  /|_\ \  \|\  \\ \  \___|_    '
+000010F4= 0D 0A 20 20 20 20 ...     68      DC.B    CR,LF,'          __ \ \  \\ \   __  \\ \  \     \ \   ___  \\ \  \\\  \\ \_____  \   '
+00001144= 0D 0A 20 20 20 20 ...     69      DC.B    CR,LF,'         |\  \\_\  \\ \  \ \  \\ \  \____ \ \  \\ \  \\ \  \\\  \\|____|\  \  '
+00001194= 0D 0A 20 20 20 20 ...     70      DC.B    CR,LF,'         \ \________\\ \__\ \__\\ \_______\\ \__\\ \__\\ \_______\ ____\_\  \ '
+000011E4= 0D 0A 20 20 20 20 ...     71      DC.B    CR,LF,'          \|________| \|__|\|__| \|_______| \|__| \|__| \|_______||\_________\'
+00001234= 0D 0A 20 20 20 20 ...     72      DC.B    CR,LF,'                                                                  \|_________|'
+00001284= 0D 0A 20 20 20 20 ...     73      DC.B    CR,LF,'                                                  Welcome to jackOS alpha v0.0'                                                                                                                                      
+000012D4                            74  MENU:
+000012D4= 0D 0A 20 20 20 20 ...     75      DC.B    CR,LF,'     COMMANDS [1-6]:'
+000012EA= 0D 0A 20 20 20 20 ...     76      DC.B    CR,LF,'         *[1] - Display Registers'
+0000130D= 0D 0A 20 20 20 20 ...     77      DC.B    CR,LF,'         *[2] - Write Registers'
+0000132E= 0D 0A 20 20 20 20 ...     78      DC.B    CR,LF,'         *[3] - Display Memory'
+0000134E= 0D 0A 20 20 20 20 ...     79      DC.B    CR,LF,'         *[4] - Write Memory'
+0000136C= 0D 0A 20 20 20 20 ...     80      DC.B    CR,LF,'         *[5] - Load S-Record over Serial'
+00001397= 0D 0A 20 20 20 20 ...     81      DC.B    CR,LF,'         *[6] - Run S-Record'
+000013B5                            82  
+000013B5                            83      INCLUDE "JSERIAL.X68"
+000013B5  =00020000                 84  DUART   EQU     $020000
+000013B5  =00000001                 85  MR1A    EQU      $01    ;Mode Register A (Read and Write Mode)
+000013B5  =00000001                 86  MR2A    EQU      $01    ;Mode Register A (Read and Write Mode)
+000013B5  =00000003                 87  SRA     EQU      $03    ;Status Register A (Read Mode)
+000013B5  =00000003                 88  CSRA    EQU      $03    ;Clock Select Register A (Write Mode)
+000013B5  =00000005                 89  CRA     EQU      $05    ;Command Register A (Write Mode)
+000013B5  =00000007                 90  HRA     EQU      $07    ;Holding Register A (Tx and Rx)
+000013B5  =00000011                 91  MR1B    EQU      $11    ;Mode Register B (Read and Write Mode)
+000013B5  =00000011                 92  MR2B    EQU      $11    ;Mode Register B (Read and Write Mode)
+000013B5  =00000013                 93  SRB     EQU      $13    ;Status Register B (Read Mode)
+000013B5  =00000013                 94  CSRB    EQU      $13    ;Clock Select Register B (Write Mode)
+000013B5  =00000015                 95  CRB     EQU      $15    ;Command Register B (Write Mode)
+000013B5  =00000017                 96  HRB     EQU      $17    ;Holding Register B (Tx and Rx)
+000013B5  =00000009                 97  ACR     EQU     $09     ;Auxilary Control Register
+000013B5  =0000000D                 98  CTU     EQU     $0D     ;Counter/Timer Upper Byte Register 
+000013B5  =0000000F                 99  CTL     EQU     $0F     ;Counter/Timer Lower Byte Register
+000013B5  =00000001                100  RxEn    EQU     $01     ;Enable Rx
+000013B5  =00000002                101  RxDs    EQU     $02     ;Disable Rx
+000013B5  =00000004                102  TxEn    EQU     $04     ;Enable Tx
+000013B5  =00000008                103  TxDs    EQU     $08     ;Disable Tx
+000013B5  =00000010                104  MRRst   EQU     $10     /Reset MRA/MRB Pointer
+000013B5  =00000020                105  RxRst   EQU     $20     ;Reset Rx
+000013B5  =00000030                106  TxRst   EQU     $30     ;Reset Tx
+000013B5  =00000000                107  Rx_Rdy  EQU     $00     ;Check SRA/SRB output bit for RXRDY
+000013B5  =00000002                108  Tx_Rdy  EQU     $02     ;Check SRA/SRB output bit for TXRDY
+000013B5                           109  
+000013B5  =00010000                110  DATA        EQU     $010000 ;Uses the RAM start
+000013B5  =000000CC                111  BAUD_RATE   EQU     $CC    ;Baud Rate = 19.2K Baud = 2400 bytes/second
+000013B5                           112  
+000013B5                           113  
+000013B5  =00000001                114  SIM     EQU     $01     ;00 = hardware, 01 = simulation
+000013B5                           115  
+000013B6  41F9 00020000            116  INIT_DUART  LEA     DUART,A0    ;point the A0 to the base DUART address
+000013BC                           117  
+000013BC                           118  ;First, reset both channels A and B during a software reset
+000013BC                           119      ;Channel A
+000013BC  117C 0030 0005           120              MOVE.B  #$30,CRA(A0)    ;reset the TxA
+000013C2  117C 0020 0005           121              MOVE.B  #$20,CRA(A0)    ;reset the RxA
+000013C8  117C 0010 0005           122              MOVE.B  #$10,CRA(A0)    ;reset the MRA pointer
+000013CE                           123      ;Channel B
+000013CE  117C 0030 0015           124              MOVE.B  #$30,CRB(A0)    
+000013D4  117C 0020 0015           125              MOVE.B  #$20,CRB(A0)
+000013DA  117C 0010 0015           126              MOVE.B  #$10,CRB(A0)
+000013E0                           127  ;Then, intiialize both channels
+000013E0                           128      ;Channel A
+000013E0  117C 0080 0009           129              MOVE.B  #$80,ACR(A0)    ;selects the baud rate set 2
+000013E6  117C 00CC 0003           130              MOVE.B  #BAUD_RATE,CSRA(A0) ;sets to 19.2k baud for Tx/Rx
+000013EC  117C 0013 0001           131              MOVE.B  #$13,MR1A(A0)   ;8bits, no parity, 1 stop bit
+000013F2                           132      ;Channel B
+000013F2  117C 00CC 0013           133              MOVE.B  #BAUD_RATE,CSRB(A0)
+000013F8  117C 0013 0011           134              MOVE.B  #$13,MR1B(A0)
+000013FE                           135              
+000013FE  117C 0007 0001           136              MOVE.B  #$07,MR2A(A0) ;Normal with Stop Bit Length of 1
+00001404  117C 0007 0011           137              MOVE.B  #$07,MR2B(A0)
+0000140A                           138              
+0000140A  117C 0005 0005           139              MOVE.B  #$05,CRA(A0) ;sets both Tx and Rx ready
+00001410  117C 0005 0015           140              MOVE.B  #$05,CRB(A0)
+00001416  2F00                     141  PUTCHAR:    MOVE.L      D0,-(SP)
+00001418  2F01                     142              MOVE.L      D1,-(SP)
+0000141A  1200                     143              MOVE.B      D0,D1
+0000141C                 TRUE      144              IFNE SIM
+0000141C  307C 0006                145                  MOVE    #06,A0
+00001420  4E4F                     146                  TRAP    #15
+00001422  6000 0028                147                  BRA     .EXIT
+00001426                           148              ENDC
+00001426  41F9 00020000            149              LEA     DUART,A0
+0000142C  0828 0002 0003           150  .WAITA      BTST    #Tx_Rdy, SRA(A0)
+00001432  6D00 0014                151              BLT     .MOVEA     
+00001436  0828 0002 0013           152  .WAITB      BTST    #Tx_Rdy, SRB(A0)
+0000143C  67EE                     153              BEQ     .WAITA
+0000143E  1141 0017                154  .MOVEB      MOVE.B  D1,HRB(A0)
+00001442  4EB9 0000144C            155              JSR     .EXIT
+00001448  1141 0007                156  .MOVEA      MOVE.B  D1,HRA(A0)
+0000144C  221F                     157  .EXIT       MOVE.L  (SP)+,D1
+0000144E  201F                     158              MOVE.L  (SP)+,D0
+00001450  4E75                     159              RTS
+00001452                           160              
+00001452                           161  GETCHAR:
+00001452  2F01                     162      MOVE.L      D1,-(SP)
+00001454  1200                     163      MOVE.B      D0,D1
+00001456  4DF9 00010000            164      LEA         DATA,A6
+0000145C                 TRUE      165     IFNE SIM
+0000145C  7005                     166      MOVE.L      #05,D0
+0000145E  4E4F                     167      TRAP        #15
+00001460                           168     ENDC
+00001460  0828 0000 0003           169  .WAITA    BTST        #Rx_Rdy,SRA(A0)
+00001466  6D00 0014                170            BLT         .GRABA
+0000146A  0828 0000 0013           171  .WAITB    BTST        #Rx_Rdy,SRB(A0)
+00001470  67EE                     172            BEQ         .WAITA
+00001472  1228 0017                173  .GRABB    MOVE.B      HRB(A0),D1
+00001476  4EB9 00001480            174            JSR         .EXIT
+0000147C  1228 0007                175  .GRABA    MOVE.B      HRA(A0),D1
+00001480  4E75                     176  .EXIT     RTS
+00001482                           177  
+00001482  2F00                     178  PUTSTR:     MOVE.L D0,-(SP) ; SAVE ON STACK. string pointer (argument)
+00001484  2F01                     179              MOVE.L D1, -(SP) ; SAVE ON STACK. temp string pointer
+00001486                           180              
+00001486  2200                     181              MOVE.L D0, D1 ; move pointer to d1 (since d0 needed to call PUTCHAR)
+00001488                           182              
+00001488  2001                     183  .1CHAR      MOVE.L D1, D0 ; load character from string to d0
+0000148A  0C40 0004                184              CMPI #$04, D0 ; char is $04?
+0000148E  6700 0008                185              BEQ .PSTREXIT ; if yes, we're done
+00001492  6182                     186              BSR PUTCHAR ; print the character
+00001494  5241                     187              ADDI #$1, D1 ; move up pointer by 1
+00001496  60F0                     188              BRA .1CHAR ; and repeat print
+00001498                           189              
+00001498  221F                     190  .PSTREXIT   MOVE.L (SP)+, D1 ; RESTORE FROM STACK. temp string pointer
+0000149A  201F                     191              MOVE.L (SP)+, D0 ; RESTORE FROM STACK. string pointer (argument)
+0000149C  4E75                     192              RTS
+0000149E                           193  
+0000149E                           194      
+0000149E  1F00                     195  OUT1X:  MOVE.B  D0,-(SP)    ;
+000014A0  C23C 000F                196          AND.B   #$0F,D1     ;
+000014A4  0601 0030                197          ADD.B   #$30,D1
+000014A8  B23C 0039                198          CMP.B   #$39,D1
+000014AC  6302                     199          BLS.S   OUT1X1
+000014AE  5E01                     200          ADD.B   #$07,D1
+000014B0                           201          
+000014B0  6100 FF64                202  OUT1X1: BSR     PUTCHAR
+000014B4  121F                     203          MOVE.B  (SP)+,D1
+000014B6  4E75                     204          RTS
+000014B8                           205          
+000014B8  E819                     206  OUT2X:  ROR.B   #4,D1
+000014BA  61E2                     207          BSR     OUT1X
+000014BC  E919                     208          ROL.B   #4,D1
+000014BE  60DE                     209          BRA     OUT1X
+000014C0                           210          
+000014C0  E059                     211  OUT4X:   ROR.W   #8,D1
+000014C2  61F4                     212          BSR     OUT2X
+000014C4  E159                     213          ROL.W   #8,D1
+000014C6  60F0                     214          BRA     OUT2X
+000014C8                           215          
+000014C8  4841                     216  OUT8X:   SWAP    D1
+000014CA  61F4                     217          BSR     OUT4X
+000014CC  4841                     218          SWAP    D1
+000014CE  60F0                     219          BRA     OUT4X
+000014D0                           220   
+000014D0  6180                     221  HEX:    BSR     GETCHAR
+000014D2  0400 0030                222          SUB.B   #$30,D0
+000014D6  6B0E                     223          BMI.S   NOT_HEX
+000014D8  B03C 0009                224          CMP.B   #$09,D0
+000014DC  6F0C                     225          BLE.S   HEX_OK
+000014DE  5F00                     226          SUB.B   #$07,D0
+000014E0  B03C 000F                227          CMP.B   #$0F,D0
+000014E4  6F04                     228          BLE.S   HEX_OK
+000014E6                           229          
+000014E6  8E3C 0001                230  NOT_HEX OR.B    #1,D7
+000014EA                           231  
+000014EA  4E75                     232  HEX_OK  RTS
+000014EC                           233  
+000014EC  2F01                     234  BYTE:   MOVE.L  D1,-(SP)
+000014EE  61E0                     235          BSR     HEX
+000014F0  E900                     236          ASL.B   #4,D0
+000014F2  1200                     237          MOVE.B  D0,D1
+000014F4  61DA                     238          BSR     HEX
+000014F6  D001                     239          ADD.B   D1,D0
+000014F8  221F                     240          MOVE.L  (SP)+,D1
+000014FA  4E75                     241          RTS
+000014FC                           242  
+000014FC  61EE                     243  WORD    BSR     BYTE
+000014FE  E140                     244          ASL.W   #8,D0
+00001500  60EA                     245          BRA     BYTE
+00001502                           246          
+00001502  61F8                     247  LONGWD  BSR     WORD
+00001504  4840                     248          SWAP    D0
+00001506  60F4                     249          BRA     WORD
+00001508                           250         
+00001508                           251  
+00001508                           252  
+00001508                           253  
+00001508                           254  
+00001508                           255  
+00001508                           256  -------------------- end include --------------------
+00001508                           257  
+00001508                           258  MAINLOOP:
+00001508  6100 FF48                259      bsr GETCHAR
+0000150C                           260      
+Line 261 ERROR: Invalid addressing mode
+0000150C                           261      cmpi D1, #$31
+0000150C                           262      
+0000150C                           263      
+0000150C                           264      END    MONITOR        ; last line of source
+
+1 error detected
+No warnings generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+ACR                 9
+BANNER              1004
+BAUD_RATE           CC
+BS                  8
+BYTE                14EC
+CR                  D
+CRA                 5
+CRB                 15
+CSRA                3
+CSRB                13
+CTL                 F
+CTU                 D
+DATA                10000
+DUART               20000
+EOT                 4
+ESC                 1B
+GETCHAR             1452
+GETCHAR:EXIT        1480
+GETCHAR:GRABA       147C
+GETCHAR:GRABB       1472
+GETCHAR:WAITA       1460
+GETCHAR:WAITB       146A
+HEX                 14D0
+HEX_OK              14EA
+HRA                 7
+HRB                 17
+INIT_DUART          13B6
+LF                  A
+LONGWD              1502
+MAINLOOP            1508
+MENU                12D4
+MONITOR             1000
+MR1A                1
+MR1B                11
+MR2A                1
+MR2B                11
+MRA                 1
+MRB                 11
+MRRST               10
+NOT_HEX             14E6
+NULL                0
+OUT1X               149E
+OUT1X1              14B0
+OUT2X               14B8
+OUT4X               14C0
+OUT8X               14C8
+PUTCHAR             1416
+PUTCHAR:EXIT        144C
+PUTCHAR:MOVEA       1448
+PUTCHAR:MOVEB       143E
+PUTCHAR:WAITA       142C
+PUTCHAR:WAITB       1436
+PUTSTR              1482
+PUTSTR:1CHAR        1488
+PUTSTR:PSTREXIT     1498
+RAM                 0
+ROM                 10000
+RXDS                2
+RXEN                1
+RXRST               20
+RX_RDY              0
+SIM                 1
+SPACE               20
+SRA                 3
+SRB                 13
+TXDS                8
+TXEN                4
+TXRST               30
+TX_RDY              2
+WAIT                57
+WORD                14FC

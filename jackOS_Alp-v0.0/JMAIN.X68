@@ -80,8 +80,20 @@ MENU:
     DC.B    CR,LF,'         *[5] - Load S-Record over Serial'
     DC.B    CR,LF,'         *[6] - Run S-Record'
 
+    INCLUDE "JSERIAL.X68"
+
 MAINLOOP:
+    bsr GETCHAR
+    
+    cmpi D1, #$31
+    
     
     END    MONITOR        ; last line of source
 
 
+
+
+*~Font name~Courier New~
+*~Font size~10~
+*~Tab type~1~
+*~Tab size~4~
