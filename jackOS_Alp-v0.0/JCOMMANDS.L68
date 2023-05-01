@@ -1,0 +1,472 @@
+00008000 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.16.01
+Created On: 4/28/2023 11:12:09 AM
+
+00000000                             1  *-----------------------------------------------------------
+00000000                             2  * Title      : JCOMMANDS.X68
+00000000                             3  * Written by : Ian Crochet
+00000000                             4  * Date       :  4/24/2023
+00000000                             5  * Description: One subroutine per monitor program command
+00000000                             6  *-----------------------------------------------------------
+00000000  43F9 000003C4              7  REGDISP:    LEA COM1,A1
+Line 8 ERROR: Undefined symbol
+00000006  6100 BD0E                  8              BSR PUTSTR
+0000000A  2F00                       9              MOVE.L  D0,-(SP)
+0000000C  4280                      10              CLR.L   D0
+Line 11 ERROR: Undefined symbol
+0000000E  6100 BD06                 11              BSR OUT1X
+Line 12 ERROR: Undefined symbol
+00000012  6100 BD02                 12              BSR OUTSPACE
+00000016  2017                      13              MOVE.L (SP),D0
+Line 14 ERROR: Undefined symbol
+00000018  6100 BCFC                 14              BSR OUT8X
+Line 15 ERROR: Undefined symbol
+0000001C  6100 BCF8                 15              BSR OUTSPACE
+00000020  2008                      16              MOVE.L A0,D0
+Line 17 ERROR: Undefined symbol
+00000022  6100 BCF2                 17              BSR OUT8X
+Line 18 ERROR: Undefined symbol
+00000026  6100 BCEE                 18              BSR OUTNL
+0000002A  103C 0001                 19              MOVE.B   #$01,D0
+Line 20 ERROR: Undefined symbol
+0000002E  6100 BCE6                 20              BSR OUT1X
+Line 21 ERROR: Undefined symbol
+00000032  6100 BCE2                 21              BSR OUTSPACE
+00000036  2001                      22              MOVE.L D1,D0
+Line 23 ERROR: Undefined symbol
+00000038  6100 BCDC                 23              BSR OUT8X
+Line 24 ERROR: Undefined symbol
+0000003C  6100 BCD8                 24              BSR OUTSPACE
+00000040  2009                      25              MOVE.L A1,D0
+Line 26 ERROR: Undefined symbol
+00000042  6100 BCD2                 26              BSR OUT8X
+Line 27 ERROR: Undefined symbol
+00000046  6100 BCCE                 27              BSR OUTNL
+0000004A  103C 0002                 28              MOVE.B   #$02,D0
+Line 29 ERROR: Undefined symbol
+0000004E  6100 BCC6                 29              BSR OUT1X
+Line 30 ERROR: Undefined symbol
+00000052  6100 BCC2                 30              BSR OUTSPACE
+00000056  2002                      31              MOVE.L D2,D0
+Line 32 ERROR: Undefined symbol
+00000058  6100 BCBC                 32              BSR OUT8X
+Line 33 ERROR: Undefined symbol
+0000005C  6100 BCB8                 33              BSR OUTSPACE
+00000060  200A                      34              MOVE.L A2,D0
+Line 35 ERROR: Undefined symbol
+00000062  6100 BCB2                 35              BSR OUT8X
+Line 36 ERROR: Undefined symbol
+00000066  6100 BCAE                 36              BSR OUTNL
+0000006A  103C 0003                 37              MOVE.B   #$03,D0
+Line 38 ERROR: Undefined symbol
+0000006E  6100 BCA6                 38              BSR OUT1X
+Line 39 ERROR: Undefined symbol
+00000072  6100 BCA2                 39              BSR OUTSPACE
+00000076  2003                      40              MOVE.L D3,D0
+Line 41 ERROR: Undefined symbol
+00000078  6100 BC9C                 41              BSR OUT8X
+Line 42 ERROR: Undefined symbol
+0000007C  6100 BC98                 42              BSR OUTSPACE
+00000080  200B                      43              MOVE.L A3,D0
+Line 44 ERROR: Undefined symbol
+00000082  6100 BC92                 44              BSR OUT8X
+Line 45 ERROR: Undefined symbol
+00000086  6100 BC8E                 45              BSR OUTNL
+0000008A  103C 0004                 46              MOVE.B   #$04,D0
+Line 47 ERROR: Undefined symbol
+0000008E  6100 BC86                 47              BSR OUT1X
+Line 48 ERROR: Undefined symbol
+00000092  6100 BC82                 48              BSR OUTSPACE
+00000096  2004                      49              MOVE.L D4,D0
+Line 50 ERROR: Undefined symbol
+00000098  6100 BC7C                 50              BSR OUT8X
+Line 51 ERROR: Undefined symbol
+0000009C  6100 BC78                 51              BSR OUTSPACE
+000000A0  200C                      52              MOVE.L A4,D0
+Line 53 ERROR: Undefined symbol
+000000A2  6100 BC72                 53              BSR OUT8X
+Line 54 ERROR: Undefined symbol
+000000A6  6100 BC6E                 54              BSR OUTNL
+000000AA  103C 0005                 55              MOVE.B   #$05,D0
+Line 56 ERROR: Undefined symbol
+000000AE  6100 BC66                 56              BSR OUT1X
+Line 57 ERROR: Undefined symbol
+000000B2  6100 BC62                 57              BSR OUTSPACE
+000000B6  2002                      58              MOVE.L D2,D0
+Line 59 ERROR: Undefined symbol
+000000B8  6100 BC5C                 59              BSR OUT8X
+Line 60 ERROR: Undefined symbol
+000000BC  6100 BC58                 60              BSR OUTSPACE
+000000C0  200D                      61              MOVE.L A5,D0
+Line 62 ERROR: Undefined symbol
+000000C2  6100 BC52                 62              BSR OUT8X
+Line 63 ERROR: Undefined symbol
+000000C6  6100 BC4E                 63              BSR OUTNL
+000000CA  103C 0006                 64              MOVE.B   #$06,D0
+Line 65 ERROR: Undefined symbol
+000000CE  6100 BC46                 65              BSR OUT1X
+Line 66 ERROR: Undefined symbol
+000000D2  6100 BC42                 66              BSR OUTSPACE
+000000D6  2006                      67              MOVE.L D6,D0
+Line 68 ERROR: Undefined symbol
+000000D8  6100 BC3C                 68              BSR OUT8X
+Line 69 ERROR: Undefined symbol
+000000DC  6100 BC38                 69              BSR OUTSPACE
+000000E0  200E                      70              MOVE.L A6,D0
+Line 71 ERROR: Undefined symbol
+000000E2  6100 BC32                 71              BSR OUT8X
+Line 72 ERROR: Undefined symbol
+000000E6  6100 BC2E                 72              BSR OUTNL
+000000EA  103C 0007                 73              MOVE.B   #$07,D0
+Line 74 ERROR: Undefined symbol
+000000EE  6100 BC26                 74              BSR OUT1X
+Line 75 ERROR: Undefined symbol
+000000F2  6100 BC22                 75              BSR OUTSPACE
+000000F6  2007                      76              MOVE.L D7,D0
+Line 77 ERROR: Undefined symbol
+000000F8  6100 BC1C                 77              BSR OUT8X
+Line 78 ERROR: Undefined symbol
+000000FC  6100 BC18                 78              BSR OUTSPACE
+00000100  200F                      79              MOVE.L A7,D0
+Line 80 ERROR: Undefined symbol
+00000102  6100 BC12                 80              BSR OUT8X
+Line 81 ERROR: Undefined symbol
+00000106  6100 BC0E                 81              BSR OUTNL
+Line 82 ERROR: Undefined symbol
+0000010A  6100 BC0A                 82  .input      bsr GETCHAR
+Line 83 ERROR: Undefined symbol
+0000010E  0C00 0016                 83              CMPI.B    #ESC, D0
+00000112  66F6                      84              BNE .input
+00000114  201F                      85              MOVE.L (SP)+, D0
+Line 86 ERROR: Undefined symbol
+00000116  6000 BBFE                 86              BRA MAINMENU
+0000011A                            87  
+0000011A  48E7 FFFF                 88  REGMOD:     MOVEM.L A0-A7/D0-D7, -(SP)
+0000011E  4280                      89              CLR.L D0
+00000120  4281                      90              CLR.L D1
+00000122  244F                      91              MOVEA.L SP, A2
+00000124  264F                      92              MOVEA.L SP, A3
+00000126  43F9 000003DC             93              LEA COM2,A1
+Line 94 ERROR: Undefined symbol
+0000012C  6100 BBE8                 94              BSR PUTSTR
+Line 95 ERROR: Undefined symbol
+00000130  6100 BBE4                 95  .inp1       bsr HEX
+00000134  0400 000D                 96              SUBI.B    #$0D, D0
+00000138  6700 000C                 97              BEQ .inp2
+0000013C  0400 00FD                 98              SUBI.B    #$FD, D0
+00000140  66EE                      99              BNE .inp1
+00000142  D4FC 0020                100              ADDA.W  #$20,A2
+Line 101 ERROR: Undefined symbol
+00000146  6100 BBCE                101  .inp2       bsr HEX
+0000014A  0C00 0006                102              CMPI.B  #06,D0
+0000014E  6EF6                     103              BGT .inp2
+00000150  5300                     104              SUBI.B  #1,D0
+00000152  584A                     105  .mul        ADDA.W  #4,A2
+00000154  57C8 FFFC                106              DBEQ    D0, .mul
+00000158  43F9 00000411            107              LEA C2PMT,A1
+Line 108 ERROR: Undefined symbol
+0000015E  6100 BBB6                108              BSR PUTSTR
+Line 109 ERROR: Undefined symbol
+00000162  6100 BBB2                109              BSR LONGWD            
+00000166  2E4A                     110              MOVEA.L A2,SP
+00000168  2E80                     111              MOVE.L  D0,(SP)
+0000016A  2E4B                     112              MOVEA.L A3,SP
+0000016C  4CDF FFFF                113              MOVEM.L (SP)+, A0-A7/D0-D7 
+Line 114 ERROR: Undefined symbol
+00000170  6000 BBA4                114              BRA MAINMENU
+00000174                           115  
+00000174  48E7 FFFF                116  MEMDISP:    MOVEM.L A0-A7/D0-D7, -(SP)
+00000178  43F9 0000044B            117              LEA COM3,A1 ;A2 = START ADDRESS A3 = END ADDRESS
+0000017E  4240                     118              CLR.W   D0
+00000180  3440                     119              MOVE.W D0,A2
+00000182  3640                     120              MOVE.W D0,A3
+Line 121 ERROR: Undefined symbol
+00000184  6100 BB90                121              BSR PUTSTR
+Line 122 ERROR: Undefined symbol
+00000188  6100 BB8C                122              BSR LONGWD
+0000018C  0C07 0001                123              CMPI.B    #1, D7
+00000190  6700 0068                124              BEQ .ER3
+00000194  0C80 0010FFF0            125              CMPI.L  #$10FFF0, D0
+0000019A  6E00 005E                126              BGT .ER3
+0000019E  2440                     127              MOVE.L  D0,A2
+000001A0  43F9 0000047E            128              LEA COM3F,A1
+Line 129 ERROR: Undefined symbol
+000001A6  6100 BB6E                129              BSR PUTSTR
+Line 130 ERROR: Undefined symbol
+000001AA  6100 BB6A                130              BSR LONGWD
+000001AE  0C07 0001                131              CMPI.B    #1, D7
+000001B2  6700 0046                132              BEQ .ER3
+000001B6  0C80 0010FFFF            133              CMPI.L  #$10FFFF, D0
+000001BC  6E00 003C                134              BGT .ER3
+000001C0  2640                     135              MOVE.L  D0,A3
+000001C2  43F9 000004AF            136              LEA COM3_X,A1
+Line 137 ERROR: Undefined symbol
+000001C8  6100 BB4C                137              BSR PUTSTR
+000001CC  200A                     138  .OUTER      MOVE.L A2,D0
+Line 139 ERROR: Undefined symbol
+000001CE  6100 BB46                139              BSR OUT8X
+000001D2  43F9 00000528            140              LEA C3_DIV, A1
+Line 141 ERROR: Undefined symbol
+000001D8  6100 BB3C                141              BSR PUTSTR
+000001DC  3C3C 000F                142              MOVE.W  #15,D6
+000001E0  101A                     143  .INNER      MOVE.B (A2)+,D0
+Line 144 ERROR: Undefined symbol
+000001E2  6100 BB32                144              BSR OUT2X
+Line 145 ERROR: Undefined symbol
+000001E6  6100 BB2E                145              BSR OUTSPACE
+000001EA                           146              ;SUBI.B #1,D6
+000001EA  51CE FFF4                147              DBRA    D6,.INNER
+Line 148 ERROR: Undefined symbol
+000001EE  6100 BB26                148              BSR OUTNL
+000001F2  B5CB                     149              CMP.L   A3,A2
+000001F4  6DD6                     150              BLT .OUTER
+000001F6  6000 0010                151              BRA .input
+000001FA  43F9 0000052C            152  .ER3        LEA C3ERR,A1
+Line 153 ERROR: Undefined symbol
+00000200  6100 BB14                153              BSR PUTSTR
+00000204  6000 FF6E                154              BRA MEMDISP
+Line 155 ERROR: Undefined symbol
+00000208  6100 BB0C                155  .input      bsr GETCHAR
+Line 156 ERROR: Undefined symbol
+0000020C  0C00 0016                156              CMPI.B    #ESC, D0
+00000210  66F6                     157              BNE .input
+00000212  4CDF FFFF                158  .EXIT       MOVEM.L (SP)+, A0-A7/D0-D7
+Line 159 ERROR: Undefined symbol
+00000216  6000 BAFE                159              BRA MAINMENU
+0000021A                           160  
+0000021A  48E7 FFFF                161  MEMMOD:     MOVEM.L A0-A7/D0-D7, -(SP)
+0000021E  43F9 000005A9            162  .prompt     LEA COM4,A1
+Line 163 ERROR: Undefined symbol
+00000224  6100 BAF0                163              BSR PUTSTR
+Line 164 ERROR: Undefined symbol
+00000228  6100 BAEC                164              BSR LONGWD
+0000022C  0C07 0001                165              CMPI.B    #1, D7
+00000230  6700 008A                166              BEQ .ER3
+00000234  0C80 0010FFFF            167              CMPI.L  #$0010FFFF, D0
+0000023A  6E00 0080                168              BGT .ER3
+0000023E  2440                     169              MOVE.L  D0, A2
+00000240  2640                     170              MOVE.L  D0, A3
+00000242  43F9 000005F8            171              LEA C4SB,A1
+Line 172 ERROR: Undefined symbol
+00000248  6100 BACC                172              BSR PUTSTR
+Line 173 ERROR: Undefined symbol
+0000024C  6100 BAC8                173              BSR HEX
+00000250  5300                     174              SUBI.B  #1, D0
+00000252  6700 001A                175              BEQ .byte
+00000256  5300                     176              SUBI.B  #1, D0
+00000258  6700 002E                177              BEQ .word
+0000025C  5300                     178              SUBI.B  #1, D0
+0000025E  6700 0042                179              BEQ .long
+00000262  43F9 00000641            180              LEA IERR,A1
+Line 181 ERROR: Undefined symbol
+00000268  6100 BAAC                181              BSR PUTSTR
+0000026C  60AC                     182              BRA MEMMOD
+Line 183 ERROR: Undefined symbol
+0000026E  6100 BAA6                183  .byte       BSR OUTNL
+00000272  544B                     184              ADDA    #2, a3
+00000274  0C80 0010FFFF            185              CMPI.L  #$10FFFF, D0
+0000027A  6E00 0040                186              BGT .ER3
+Line 187 ERROR: Undefined symbol
+0000027E  6100 BA96                187              BSR BYTE
+00000282  1480                     188              MOVE.B D0, (A2)
+00000284  6000 0044                189              BRA .EXIT
+Line 190 ERROR: Undefined symbol
+00000288  6100 BA8C                190  .word       BSR OUTNL
+0000028C  584B                     191              ADDA    #4, a3
+0000028E  0C80 0010FFFF            192              CMPI.L  #$10FFFF, D0
+00000294  6E00 0026                193              BGT .ER3
+Line 194 ERROR: Undefined symbol
+00000298  6100 BA7C                194              BSR WORD
+0000029C  6000 002C                195              BRA .EXIT
+000002A0  3480                     196              MOVE.W D0, (A2)
+Line 197 ERROR: Undefined symbol
+000002A2  6100 BA72                197  .long       BSR OUTNL
+000002A6  504B                     198              ADDA    #8, a3
+000002A8  0C80 0010FFFF            199              CMPI.L  #$10FFFF, D0
+000002AE  6E00 000C                200              BGT .ER3
+Line 201 ERROR: Undefined symbol
+000002B2  6100 BA62                201              BSR LONGWD
+000002B6  2480                     202              MOVE.L D0, (A2)
+000002B8  6000 0010                203              BRA .EXIT
+000002BC  43F9 0000052C            204  .ER3        LEA C3ERR,A1
+Line 205 ERROR: Undefined symbol
+000002C2  6100 BA52                205              BSR PUTSTR
+000002C6  6000 FF56                206              BRA .prompt
+000002CA  4CDF FFFF                207  .EXIT       MOVEM.L (SP)+, A0-A7/D0-D7
+Line 208 ERROR: Undefined symbol
+000002CE  6000 BA46                208              BRA MAINMENU
+000002D2                           209  
+000002D2  48E7 FFFF                210  LOADSREC:   MOVEM.L A0-A7/D0-D7, -(SP)
+Line 211 ERROR: Undefined symbol
+000002D6  45F9 004DBD16            211              LEA RAM,A2
+000002DC  43F9 00000642            212              LEA COM5,A1
+Line 213 ERROR: Undefined symbol
+000002E2  6100 BA32                213              BSR PUTSTR
+000002E6                           214              ;outer loop
+Line 215 ERROR: Undefined symbol
+000002E6  6100 BA2E                215  .outer      BSR GETCHAR
+Line 216 ERROR: Undefined symbol
+000002EA  0C00 0016                216              CMPI.B  #ESC,D0
+000002EE  6700 00B0                217              BEQ .rts
+Line 218 ERROR: Undefined symbol
+000002F2  6100 BA22                218              BSR PUTCHAR
+000002F6  0C00 0053                219              CMPI.B  #'S',D0
+000002FA  66EA                     220              BNE .outer
+Line 221 ERROR: Undefined symbol
+000002FC  6100 BA18                221              BSR HEX              
+00000300  0C00 0009                222              CMPI.B  #$09,D0
+00000304  6700 0068                223              BEQ .term
+00000308  0C00 0008                224              CMPI.B  #$08,D0
+0000030C  6700 0060                225              BEQ .term
+00000310  0C00 0002                226  .data       CMPI.B  #$02,D0
+00000314  6700 0022                227              BEQ .s2
+00000318  0C00 0001                228              CMPI.B  #$01,D0
+0000031C  66C8                     229              BNE .outer
+0000031E                           230              ;inner loops
+0000031E                           231              ;2-BYTE
+0000031E  4203                     232  .s1         CLR.B   D3
+00000320  6100 0086                233              BSR .readb
+00000324  5700                     234              SUB.B   #3,D0
+00000326  1400                     235              MOVE.B  D0,D2
+00000328  4280                     236              CLR.L   D0
+0000032A  6100 007C                237              BSR .readb
+0000032E  E181                     238              ASL.L   #8,D1
+00000330  6100 0076                239              BSR .readb
+00000334                           240              ;MOVE.L  D0,A2
+00000334  6000 001E                241              BRA .store
+00000338                           242              ;3-BYTE
+00000338  4203                     243  .s2         CLR.B   D3
+0000033A  6100 006C                244              BSR .readb
+0000033E  5900                     245              SUB.B   #4,D0
+00000340  1400                     246              MOVE.B  D0,D2
+00000342  4280                     247              CLR.L   D0
+00000344  6100 0062                248              BSR .readb
+00000348  E180                     249              ASL.L   #8,D0
+0000034A  6100 005C                250              BSR .readb
+0000034E  E180                     251              ASL.L   #8,D0
+00000350  6100 0056                252              BSR .readb
+00000354                           253              ;MOVE.L  D0,A2
+00000354  6100 0052                254  .store      bsr .readb
+00000358  14C0                     255              move.b  D0,(A2)+
+0000035A  5302                     256              sub.b   #1, D2
+0000035C  66F6                     257              bne .store
+0000035E  6100 0048                258              bsr .readb
+00000362  5203                     259              add.b   #1,D3
+00000364  6780                     260              beq .outer
+00000366  8E3C 0004                261              or.b    #%0000100,d7
+0000036A  6000 0010                262              bra .exit
+0000036E                           263              ;termination code
+0000036E  6100 0038                264  .term       BSR .readb
+00000372  1C00                     265              MOVE.B  D0,D6
+00000374  6100 0032                266  .tloop      BSR .READB
+00000378  5306                     267              SUB.B   #1,D6
+0000037A  66F8                     268              BNE .tloop
+0000037C  0807 0000                269  .exit       btst    #0,D7
+00000380  6700 000C                270              BEQ .chk
+00000384  43F9 00000641            271              LEA IERR, A1
+Line 272 ERROR: Undefined symbol
+0000038A  6100 B98A                272              BSR PUTSTR
+0000038E  0807 0002                273  .chk        btst    #2,D7
+00000392  6700 000C                274              BEQ .rts
+00000396  43F9 00000687            275              LEA C5ERR, A1
+Line 276 ERROR: Undefined symbol
+0000039C  6100 B978                276              BSR PUTSTR
+000003A0  4CDF FFFF                277  .rts        MOVEM.L (SP)+, A0-A7/D0-D7
+Line 278 ERROR: Undefined symbol
+000003A4  6000 B970                278              BRA MAINMENU
+Line 279 ERROR: Undefined symbol
+000003A8  6100 B96C                279  .readb      BSR BYTE
+000003AC  D600                     280              ADD.B D0, D3
+000003AE  4E75                     281              RTS
+000003B0                           282  
+000003B0  43F9 000006AB            283  RUNSREC:    LEA COM6,A1
+Line 284 ERROR: Undefined symbol
+000003B6  6100 B95E                284              BSR PUTSTR
+Line 285 ERROR: Undefined symbol
+000003BA  4EB9 004DBD16            285              JSR (RAM)
+Line 286 ERROR: Undefined symbol
+000003C0  6000 B954                286              BRA MAINMENU
+Line 287 ERROR: Undefined symbol
+000003C4= EC EC 20 20 20 20 ...    287  COM1:   DC.B    CR,LF,'    DATA    ADDRESS',CR,LF,EOT
+Line 288 ERROR: Undefined symbol
+000003DC= EC EC 45 6E 74 65 ...    288  COM2:   DC.B    CR,LF,'Enter in the desired register [D0-D7 or A0 - A6]: ',EOT
+Line 289 ERROR: Undefined symbol
+00000411= EC EC 45 6E 74 65 ...    289  C2PMT:  DC.B    CR,LF,'Enter in the the new value for the respected register: ',EOT
+Line 290 ERROR: Undefined symbol
+0000044B= EC EC 45 6E 74 65 ...    290  COM3:   DC.B    CR,LF,'Enter in the starting address you want to view: ',EOT
+Line 291 ERROR: Undefined symbol
+0000047E= EC EC 45 6E 74 65 ...    291  COM3F:  DC.B    CR,LF,'Enter in the ending address you want to view: ',EOT
+Line 292 ERROR: Undefined symbol
+000004AF= EC EC 41 44 44 52 ...    292  COM3_X: DC.B    CR,LF,'ADDRESS    00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F',CR,LF,'--------------------------------------------------------',CR,LF,EOT
+Line 293 ERROR: Undefined symbol
+00000528= 20 7C 20 20              293  C3_DIV: DC.B    ' | ',EOT
+Line 294 ERROR: Undefined symbol
+0000052C= EC EC 45 52 52 4F ...    294  C3ERR:  DC.B    CR,LF,'ERROR: Invalid Address Input. Address must be within the following boundaries [00000000 - 0000FFFF, 00100000 - 0010FFFF]',CR,LF,EOT
+Line 295 ERROR: Undefined symbol
+000005A9= EC EC 45 6E 74 65 ...    295  COM4:   DC.B    CR,LF,'Enter the desired start address [00000000 - 0000FFFF, 00100000 - 0010FFFF]: ',EOT
+Line 296 ERROR: Undefined symbol
+000005F8= EC EC 53 65 6C 65 ...    296  C4SB:   DC.B    CR,LF,'Select the desired size to modify [1 - BYTE, 2 - WORD, 3 - LONGWORD]: ',EOT
+Line 297 ERROR: Undefined symbol
+00000641= EC                       297  IERR:   DC.B    CR.LF,'ERROR: Invalid Input',CR,LF,EOT
+Line 298 ERROR: Undefined symbol
+00000642= EC EC 5B 53 5D 2D ...    298  COM5:   DC.B    CR,LF,'[S]-Record',CR,LF,'[M]emory',CR,LF,'F[ILE]',CR,LF,'Please paste the SMILE file here: ',CR,LF,EOT
+Line 299 ERROR: Undefined symbol
+00000687= EC EC 45 52 52 4F ...    299  C5ERR:  DC.B    CR,LF,'ERROR: Issue with loading SMILE',CR,LF,EOT
+Line 300 ERROR: Undefined symbol
+000006AB= EC EC 45 6E 74 65 ...    300  COM6:   DC.B    CR,LF,'Entering RAM...',CR,LF,EOT
+000006BF                           301  
+Line 302 WARNING: END directive missing, starting address not set
+
+112 errors detected
+1 warning generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+C2PMT               411
+C3ERR               52C
+C3_DIV              528
+C4SB                5F8
+C5ERR               687
+COM1                3C4
+COM2                3DC
+COM3                44B
+COM3F               47E
+COM3_X              4AF
+COM4                5A9
+COM5                642
+COM6                6AB
+IERR                641
+LOADSREC            2D2
+LOADSREC:CHK        38E
+LOADSREC:DATA       310
+LOADSREC:EXIT       37C
+LOADSREC:OUTER      2E6
+LOADSREC:READB      3A8
+LOADSREC:RTS        3A0
+LOADSREC:S1         31E
+LOADSREC:S2         338
+LOADSREC:STORE      354
+LOADSREC:TERM       36E
+LOADSREC:TLOOP      374
+MEMDISP             174
+MEMDISP:ER3         1FA
+MEMDISP:EXIT        212
+MEMDISP:INNER       1E0
+MEMDISP:INPUT       208
+MEMDISP:OUTER       1CC
+MEMMOD              21A
+MEMMOD:BYTE         26E
+MEMMOD:ER3          2BC
+MEMMOD:EXIT         2CA
+MEMMOD:LONG         2A2
+MEMMOD:PROMPT       21E
+MEMMOD:WORD         288
+REGDISP             0
+REGDISP:INPUT       10A
+REGMOD              11A
+REGMOD:INP1         130
+REGMOD:INP2         146
+REGMOD:MUL          152
+RUNSREC             3B0

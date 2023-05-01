@@ -1,0 +1,106 @@
+00008000 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.16.01
+Created On: 4/24/2023 1:28:50 AM
+
+00000000                             1  *-----------------------------------------------------------
+00000000                             2  * Title      :JEXCEPTION 
+00000000                             3  * Written by :Ian Crochet
+00000000                             4  * Date       :4/23/2023
+00000000                             5  * Description:takes care of error handling
+00000000                             6  *-----------------------------------------------------------
+00000000                             7  * ASCII Symbols
+00000000                             8  UNI_EX:
+00000000  2F09                       9              MOVE.L  A1, -(SP)
+00000002  2279 00000060             10              MOVE.L  BOMB, A1
+Line 11 ERROR: Undefined symbol
+00000008  6100 BD0C                 11              BSR     PUTSTR
+0000000C  2279 000002C6             12              MOVE.L  EX_UNI, A1
+Line 13 ERROR: Undefined symbol
+00000012  6100 BD02                 13              BSR     PUTSTR
+00000016  225F                      14              MOVE.L  (SP)+, A1
+00000018                            15  ADD_ERR:
+00000018  2F09                      16              MOVE.L  A1, -(SP)
+0000001A  2279 00000060             17              MOVE.L  BOMB, A1
+Line 18 ERROR: Undefined symbol
+00000020  6100 BCF4                 18              BSR     PUTSTR
+00000024  2279 000002E4             19              MOVE.L  ERR_ADD, A1
+Line 20 ERROR: Undefined symbol
+0000002A  6100 BCEA                 20              BSR     PUTSTR
+0000002E  225F                      21              MOVE.L  (SP)+, A1
+00000030                            22  
+00000030                            23  IL_ERR:
+00000030  2F09                      24              MOVE.L  A1, -(SP)
+00000032  2279 00000060             25              MOVE.L  BOMB, A1
+Line 26 ERROR: Undefined symbol
+00000038  6100 BCDC                 26              BSR     PUTSTR
+0000003C  2279 000002F4             27              MOVE.L  ERR_IL, A1
+Line 28 ERROR: Undefined symbol
+00000042  6100 BCD2                 28              BSR     PUTSTR
+00000046  225F                      29              MOVE.L  (SP)+, A1
+00000048                            30  
+00000048                            31  DIV_ZER:
+00000048  2F09                      32              MOVE.L  A1, -(SP)
+0000004A  2279 00000060             33              MOVE.L  BOMB, A1
+Line 34 ERROR: Undefined symbol
+00000050  6100 BCC4                 34              BSR     PUTSTR
+00000054  2279 00000310             35              MOVE.L  ERR_DIV, A1
+Line 36 ERROR: Undefined symbol
+0000005A  6100 BCBA                 36              BSR     PUTSTR
+0000005E  225F                      37              MOVE.L  (SP)+, A1
+00000060                            38  
+00000060                            39  
+00000060                            40  BOMB:
+Line 41 ERROR: Undefined symbol
+00000060= EC EC 20 20 20 20 ...     41      DC.B    CR,LF,'                             ____'
+Line 42 ERROR: Undefined symbol
+00000083= EC EC 20 20 20 20 ...     42      DC.B    CR,LF,'                     __,-~~/~    `---.'
+Line 43 ERROR: Undefined symbol
+000000AB= EC EC 20 20 20 20 ...     43      DC.B    CR,LF,'                   _/_,---(      ,    )'
+Line 44 ERROR: Undefined symbol
+000000D4= EC EC 20 20 20 20 ...     44      DC.B    CR,LF,'               __ /        <    /   )  \___'
+Line 45 ERROR: Undefined symbol
+00000101= EC EC 2D 20 2D 2D ...     45      DC.B    CR,LF,'- ------===;;;',$27,'====------------------===;;;===----- -  -'
+Line 46 ERROR: Undefined symbol
+0000013B= EC EC 20 20 20 20 ...     46      DC.B    CR,LF,'                  \/  ~"~"~"~"~"~\~"~)~"/'
+Line 47 ERROR: Undefined symbol
+00000166= EC EC 20 20 20 20 ...     47      DC.B    CR,LF,'                  (_ (   \  (     >    \)'
+Line 48 ERROR: Undefined symbol
+00000191= EC EC 20 20 20 20 ...     48      DC.B    CR,LF,'                   \_( _ <         >_>',$27
+Line 49 ERROR: Undefined symbol
+000001BA= EC EC 20 20 20 20 ...     49      DC.B    CR,LF,'                      ~ `-i',$27,' ::>|--"'
+Line 50 ERROR: Undefined symbol
+000001E0= EC EC 20 20 20 20 ...     50      DC.B    CR,LF,'                          I;|.|.|'
+Line 51 ERROR: Undefined symbol
+00000203= EC EC 20 20 20 20 ...     51      DC.B    CR,LF,'                         <|i::|i|`.'
+Line 52 ERROR: Undefined symbol
+00000228= EC EC 20 20 20 20 ...     52      DC.B    CR,LF,'                        (` ^',$27,'"`-',$27,' ")'
+Line 53 ERROR: Undefined symbol
+0000024E= EC EC 4F 6F 70 73 ...     53      DC.B    CR,LF,'Oopsie woopsie, looks like one of our PIPE BOMBS went off while you were acting DEVIOUS just now.'
+Line 54 ERROR: Undefined symbol
+000002B1= EC EC 50 49 50 45 ...     54      DC.B    CR,LF,'PIPE BOMB REPORT: ',EOT
+Line 55 ERROR: Undefined symbol
+000002C6= 53 74 61 63 6B 20 ...     55  EX_UNI: DC.B    'Stack Pointer Uninitialized',CR,LF,EOT
+Line 56 ERROR: Undefined symbol
+000002E4= 41 64 64 72 65 73 ...     56  ERR_ADD: DC.B    'Address Error',CR,LF,EOT
+Line 57 ERROR: Undefined symbol
+000002F4= 49 6C 6C 65 67 61 ...     57  ERR_IL: DC.B    'Illegal Instruction Error',CR,LF,EOT
+Line 58 ERROR: Undefined symbol
+00000310= 44 69 76 69 73 69 ...     58  ERR_DIV: DC.B    'Division by Zero Error',CR,LF,EOT
+Line 59 WARNING: END directive missing, starting address not set
+
+26 errors detected
+1 warning generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+ADD_ERR             18
+BOMB                60
+DIV_ZER             48
+ERR_ADD             2E4
+ERR_DIV             310
+ERR_IL              2F4
+EX_UNI              2C6
+IL_ERR              30
+UNI_EX              0

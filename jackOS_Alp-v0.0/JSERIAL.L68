@@ -1,218 +1,270 @@
-00000000 Starting Address
+00008000 Starting Address
 Assembler used: EASy68K Editor/Assembler v5.16.01
-Created On: 3/21/2023 7:46:21 PM
+Created On: 4/26/2023 2:20:54 AM
 
 00000000                             1  *-----------------------------------------------------------
 00000000                             2  *   JSERIAL.X68 - INPUT/OUTPUT UTILITY ROUTINES
 00000000                             3  * Keep in mind both input and output bytes will load into the D0
 00000000                             4  *-----------------------------------------------------------
-00000000                             5  * Device Addresses
-00000000  =00020000                  6  DUART   EQU     $020000
-00000000                             7  * DUART Offsets
-00000000                             8  *   Channel A
-00000000  =00000001                  9  MR1A    EQU      $01    ;Mode Register A (Read and Write Mode)
-00000000  =00000001                 10  MR2A    EQU      $01    ;Mode Register A (Read and Write Mode)
-00000000  =00000003                 11  SRA     EQU      $03    ;Status Register A (Read Mode)
-00000000  =00000003                 12  CSRA    EQU      $03    ;Clock Select Register A (Write Mode)
-00000000  =00000005                 13  CRA     EQU      $05    ;Command Register A (Write Mode)
-00000000  =00000007                 14  HRA     EQU      $07    ;Holding Register A (Tx and Rx)
-00000000                            15  *   Channel B
-00000000  =00000011                 16  MR1B    EQU      $11    ;Mode Register B (Read and Write Mode)
-00000000  =00000011                 17  MR2B    EQU      $11    ;Mode Register B (Read and Write Mode)
-00000000  =00000013                 18  SRB     EQU      $13    ;Status Register B (Read Mode)
-00000000  =00000013                 19  CSRB    EQU      $13    ;Clock Select Register B (Write Mode)
-00000000  =00000015                 20  CRB     EQU      $15    ;Command Register B (Write Mode)
-00000000  =00000017                 21  HRB     EQU      $17    ;Holding Register B (Tx and Rx)
-00000000                            22  *   General DUART Control
-00000000  =00000009                 23  ACR     EQU     $09     ;Auxilary Control Register
-00000000  =0000000D                 24  CTU     EQU     $0D     ;Counter/Timer Upper Byte Register 
-00000000  =0000000F                 25  CTL     EQU     $0F     ;Counter/Timer Lower Byte Register
-00000000                            26  * DUART Command Register Values
-00000000  =00000001                 27  RxEn    EQU     $01     ;Enable Rx
-00000000  =00000002                 28  RxDs    EQU     $02     ;Disable Rx
-00000000  =00000004                 29  TxEn    EQU     $04     ;Enable Tx
-00000000  =00000008                 30  TxDs    EQU     $08     ;Disable Tx
-00000000  =00000010                 31  MRRst   EQU     $10     /Reset MRA/MRB Pointer
-00000000  =00000020                 32  RxRst   EQU     $20     ;Reset Rx
-00000000  =00000030                 33  TxRst   EQU     $30     ;Reset Tx
-00000000  =00000000                 34  Rx_Rdy  EQU     $00     ;Check SRA/SRB output bit for RXRDY
-00000000  =00000002                 35  Tx_Rdy  EQU     $02     ;Check SRA/SRB output bit for TXRDY
-00000000                            36  
-00000000  =00010000                 37  DATA        EQU     $010000 ;Uses the RAM start
-00000000  =000000CC                 38  BAUD_RATE   EQU     $CC    ;Baud Rate = 19.2K Baud = 2400 bytes/second
-00000000                            39  
-00000000                            40  
-00000000  =00000001                 41  SIM     EQU     $01     ;00 = hardware, 01 = simulation
-00000000                            42  
-00000000                            43  *---------------------------
-00000000                            44  *     DUART INITIALIZATION
-00000000                            45  *---------------------------
-00000000  41F9 00020000             46  INIT_DUART  LEA     DUART,A0    ;point the A0 to the base DUART address
-00000006                            47  
-00000006                            48  ;First, reset both channels A and B during a software reset
-00000006                            49      ;Channel A
-00000006  117C 0030 0005            50              MOVE.B  #$30,CRA(A0)    ;reset the TxA
-0000000C  117C 0020 0005            51              MOVE.B  #$20,CRA(A0)    ;reset the RxA
-00000012  117C 0010 0005            52              MOVE.B  #$10,CRA(A0)    ;reset the MRA pointer
-00000018                            53      ;Channel B
-00000018  117C 0030 0015            54              MOVE.B  #$30,CRB(A0)    
-0000001E  117C 0020 0015            55              MOVE.B  #$20,CRB(A0)
-00000024  117C 0010 0015            56              MOVE.B  #$10,CRB(A0)
-0000002A                            57  ;Then, intiialize both channels
-0000002A                            58      ;Channel A
-0000002A  117C 0080 0009            59              MOVE.B  #$80,ACR(A0)    ;selects the baud rate set 2
-00000030  117C 00CC 0003            60              MOVE.B  #BAUD_RATE,CSRA(A0) ;sets to 19.2k baud for Tx/Rx
-00000036  117C 0013 0001            61              MOVE.B  #$13,MR1A(A0)   ;8bits, no parity, 1 stop bit
-0000003C                            62      ;Channel B
-0000003C  117C 00CC 0013            63              MOVE.B  #BAUD_RATE,CSRB(A0)
-00000042  117C 0013 0011            64              MOVE.B  #$13,MR1B(A0)
-00000048                            65              
-00000048  117C 0007 0001            66              MOVE.B  #$07,MR2A(A0) ;Normal with Stop Bit Length of 1
-0000004E  117C 0007 0011            67              MOVE.B  #$07,MR2B(A0)
-00000054                            68              
-00000054  117C 0005 0005            69              MOVE.B  #$05,CRA(A0) ;sets both Tx and Rx ready
-0000005A  117C 0005 0015            70              MOVE.B  #$05,CRB(A0)
-00000060                            71  *--------------------------------
-00000060                            72  *     GENERAL UTILITY SUBROUTINES
-00000060                            73  *--------------------------------
-00000060  2F00                      74  PUTCHAR:    MOVE.L      D0,-(SP)
-00000062  2F01                      75              MOVE.L      D1,-(SP)
-00000064  1200                      76              MOVE.B      D0,D1
-00000066                 TRUE       77              IFNE SIM
-00000066  307C 0006                 78              MOVE    #06,A0
-0000006A  4E4F                      79              TRAP    #15
-0000006C  6000 0028                 80              BRA     .EXIT
-00000070                            81              ENDC
-00000070  41F9 00020000             82              LEA     DUART,A0
-00000076  0828 0002 0003            83  .WAITA      BTST    #Tx_Rdy, SRA(A0)
-0000007C  6D00 0014                 84              BLT     .MOVEA     
-00000080  0828 0002 0013            85  .WAITB      BTST    #Tx_Rdy, SRB(A0)
-00000086  67EE                      86              BEQ     .WAITA
-00000088  1141 0017                 87  .MOVEB      MOVE.B  D1,HRB(A0)
-0000008C  4EB9 00000096             88              JSR     .EXIT
-00000092  1141 0007                 89  .MOVEA      MOVE.B  D1,HRA(A0)
-00000096  221F                      90  .EXIT       MOVE.L  (SP)+,D1
-00000098  201F                      91              MOVE.L  (SP)+,D0
-0000009A  4E75                      92              RTS
-0000009C                            93              
-0000009C                            94  GETCHAR:
-0000009C  2F01                      95      MOVE.L      D1,-(SP)
-0000009E  1200                      96      MOVE.B      D0,D1
-000000A0  4DF9 00010000             97      LEA         DATA,A6
-000000A6                 TRUE       98      IFNE SIM
-000000A6  303C 0005                 99      MOVE.W      #05,D0
-000000AA  4E4F                     100      TRAP        #15
-000000AC                           101      ENDC
-000000AC  0828 0000 0003           102  .WAITA    BTST        #Rx_Rdy,SRA(A0)
-000000B2  6D00 0014                103            BLT         .GRABA
-000000B6  0828 0000 0013           104  .WAITB    BTST        #Rx_Rdy,SRB(A0)
-000000BC  67EE                     105            BEQ         .WAITA
-000000BE  1228 0017                106  .GRABB    MOVE.B      HRB(A0),D1
-000000C2  4EB9 000000CC            107            JSR         .EXIT
-000000C8  1228 0007                108  .GRABA    MOVE.B      HRA(A0),D1
-000000CC  4E75                     109  .EXIT     RTS
-000000CE                           110  
-000000CE                           111  * PUTSTR: print string in memory. string terminated by $04 (ASCII End of Transmission)
-000000CE                           112  * arguments: address of first character in D0
-000000CE                           113  * return: no values
-000000CE  2F00                     114  PUTSTR:     MOVE.L D0,-(SP) ; SAVE ON STACK. string pointer (argument)
-000000D0  2F01                     115              MOVE.L D1, -(SP) ; SAVE ON STACK. temp string pointer
-000000D2                           116              
-000000D2  2200                     117              MOVE.L D0, D1 ; move pointer to d1 (since d0 needed to call PUTCHAR)
-000000D4                           118              
-000000D4  2001                     119  .1CHAR      MOVE.L D1, D0 ; load character from string to d0
-000000D6  0C40 0004                120              CMPI #$04, D0 ; char is $04?
-000000DA  6700 0008                121              BEQ .PSTREXIT ; if yes, we're done
-000000DE  6180                     122              BSR PUTCHAR ; print the character
-000000E0  5241                     123              ADDI #$1, D1 ; move up pointer by 1
-000000E2  60F0                     124              BRA .1CHAR ; and repeat print
-000000E4                           125              
-000000E4  221F                     126  .PSTREXIT   MOVE.L (SP)+, D1 ; RESTORE FROM STACK. temp string pointer
-000000E6  201F                     127              MOVE.L (SP)+, D0 ; RESTORE FROM STACK. string pointer (argument)
-000000E8  4E75                     128              RTS
-000000EA                           129  
-000000EA                           130      
-000000EA                           131  *---------------------------
-000000EA                           132  *     OUTPUT SUBROUTINES
-000000EA                           133  *
-000000EA                           134  *     OUT1X = PRINT ONE HEXADECIMAL CHARACTER
-000000EA                           135  *     OUT2X = PRINT TWO HEXADECIMAL CHARACTER
-000000EA                           136  *     OUT4X = PRINT FOUR HEXADECIMAL CHARACTER
-000000EA                           137  *     OUT8X = PRINT EIGHT HEXADECIMAL CHARACTER
-000000EA                           138  *---------------------------
-000000EA  1F00                     139  OUT1X:  MOVE.B  D0,-(SP)    ;
-000000EC  C23C 000F                140          AND.B   #$0F,D1     ;
-000000F0  0601 0030                141          ADD.B   #$30,D1
-000000F4  B23C 0039                142          CMP.B   #$39,D1
-000000F8  6302                     143          BLS.S   OUT1X1
-000000FA  5E01                     144          ADD.B   #$07,D1
-000000FC                           145          
-000000FC  6100 FF62                146  OUT1X1: BSR     PUTCHAR
-00000100  121F                     147          MOVE.B  (SP)+,D1
-00000102  4E75                     148          RTS
-00000104                           149          
-00000104  E819                     150  OUT2X:  ROR.B   #4,D1
-00000106  61E2                     151          BSR     OUT1X
-00000108  E919                     152          ROL.B   #4,D1
-0000010A  60DE                     153          BRA     OUT1X
-0000010C                           154          
-0000010C  E059                     155  OUT4X:   ROR.W   #8,D1
-0000010E  61F4                     156          BSR     OUT2X
-00000110  E159                     157          ROL.W   #8,D1
-00000112  60F0                     158          BRA     OUT2X
-00000114                           159          
-00000114  4841                     160  OUT8X:   SWAP    D1
-00000116  61F4                     161          BSR     OUT4X
-00000118  4841                     162          SWAP    D1
-0000011A  60F0                     163          BRA     OUT4X
-0000011C                           164   
-0000011C                           165  *---------------------------
-0000011C                           166  *     INPUT SUBROUTINES
-0000011C                           167  *
-0000011C                           168  *   HEX = GET ONE HEX CHARACTER INTO D0
-0000011C                           169  *   BYTE = GET TWO HEX CHARACTERS INTO D0
-0000011C                           170  *   WORD = GET FOUR WORD HEX CHARACTERS INTO D0
-0000011C                           171  *   LONGWD = GET A LONGWORD FROM THE LINE BUFFER INTO D0
-0000011C                           172  *   Keep in mind Bit 0 of D7 is set to indicate a hexadecimal input error
-0000011C                           173  *---------------------------
-0000011C  6100 FF7E                174  HEX:    BSR     GETCHAR
-00000120  0400 0030                175          SUB.B   #$30,D0
-00000124  6B0E                     176          BMI.S   NOT_HEX
-00000126  B03C 0009                177          CMP.B   #$09,D0
-0000012A  6F0C                     178          BLE.S   HEX_OK
-0000012C  5F00                     179          SUB.B   #$07,D0
-0000012E  B03C 000F                180          CMP.B   #$0F,D0
-00000132  6F04                     181          BLE.S   HEX_OK
-00000134                           182          
-00000134  8E3C 0001                183  NOT_HEX OR.B    #1,D7
-00000138                           184  
-00000138  4E75                     185  HEX_OK  RTS
-0000013A                           186  
-0000013A  2F01                     187  BYTE:   MOVE.L  D1,-(SP)
-0000013C  61DE                     188          BSR     HEX
-0000013E  E900                     189          ASL.B   #4,D0
-00000140  1200                     190          MOVE.B  D0,D1
-00000142  61D8                     191          BSR     HEX
-00000144  D001                     192          ADD.B   D1,D0
-00000146  221F                     193          MOVE.L  (SP)+,D1
-00000148  4E75                     194          RTS
-0000014A                           195  
-0000014A  61EE                     196  WORD    BSR     BYTE
-0000014C  E140                     197          ASL.W   #8,D0
-0000014E  60EA                     198          BRA     BYTE
-00000150                           199          
-00000150  61F8                     200  LONGWD  BSR     WORD
-00000152  4840                     201          SWAP    D0
-00000154  60F4                     202          BRA     WORD
-00000156                           203         
-00000156                           204  
-00000156                           205  
-00000156                           206  
-00000156                           207  
-00000156                           208  
-Line 209 WARNING: END directive missing, starting address not set
+00000000                             5  * DUART Offsets
+00000000                             6  *   Channel A
+00000000  =00000001                  7  MR1A    EQU      $01    ;Mode Register A (Read and Write Mode)
+00000000  =00000001                  8  MR2A    EQU      $01    ;Mode Register A (Read and Write Mode)
+00000000  =00000003                  9  SRA     EQU      $03    ;Status Register A (Read Mode)
+00000000  =00000003                 10  CSRA    EQU      $03    ;Clock Select Register A (Write Mode)
+00000000  =00000005                 11  CRA     EQU      $05    ;Command Register A (Write Mode)
+00000000  =00000007                 12  HRA     EQU      $07    ;Holding Register A (Tx and Rx)
+00000000                            13  *   Channel B
+00000000  =00000011                 14  MR1B    EQU      $11    ;Mode Register B (Read and Write Mode)
+00000000  =00000011                 15  MR2B    EQU      $11    ;Mode Register B (Read and Write Mode)
+00000000  =00000013                 16  SRB     EQU      $13    ;Status Register B (Read Mode)
+00000000  =00000013                 17  CSRB    EQU      $13    ;Clock Select Register B (Write Mode)
+00000000  =00000015                 18  CRB     EQU      $15    ;Command Register B (Write Mode)
+00000000  =00000017                 19  HRB     EQU      $17    ;Holding Register B (Tx and Rx)
+00000000                            20  *   General DUART Control
+00000000  =00000009                 21  ACR     EQU     $09     ;Auxilary Control Register
+00000000  =0000000D                 22  CTU     EQU     $0D     ;Counter/Timer Upper Byte Register 
+00000000  =0000000F                 23  CTL     EQU     $0F     ;Counter/Timer Lower Byte Register
+00000000                            24  * DUART Command Register Values
+00000000  =00000001                 25  RxEn    EQU     $01     ;Enable Rx
+00000000  =00000002                 26  RxDs    EQU     $02     ;Disable Rx
+00000000  =00000004                 27  TxEn    EQU     $04     ;Enable Tx
+00000000  =00000008                 28  TxDs    EQU     $08     ;Disable Tx
+00000000  =00000010                 29  MRRst   EQU     $10     /Reset MRA/MRB Pointer
+00000000  =00000020                 30  RxRst   EQU     $20     ;Reset Rx
+00000000  =00000030                 31  TxRst   EQU     $30     ;Reset Tx
+00000000  =00000000                 32  Rx_Rdy  EQU     $00     ;Check SRA/SRB output bit for RXRDY
+00000000  =00000002                 33  Tx_Rdy  EQU     $02     ;Check SRA/SRB output bit for TXRDY
+00000000                            34  
+00000000  =00100000                 35  DATA        EQU     $100000 ;Uses the RAM start
+00000000  =000000CC                 36  BAUD_RATE   EQU     $CC    ;Baud Rate = 19.2K Baud = 2400 bytes/second
+00000000                            37  REG_F       DS.W    37     ;frame for D0-D7, A0-A6, USP, SSP, SR, PC
+0000004A                            38  
+0000004A                            39  *---------------------------
+0000004A                            40  *     DUART INITIALIZATION
+0000004A                            41  *---------------------------
+Line 42 ERROR: Undefined symbol
+0000004A  41F9 004DBD16             42  INIT_DUART:  LEA     DUART,A0    ;point the A0 to the base DUART address
+00000050                            43  
+00000050                            44  ;First, reset both channels A and B during a software reset
+00000050                            45      ;Channel A
+00000050  117C 0030 0005            46              MOVE.B  #$30,CRA(A0)    ;reset the TxA
+00000056  117C 0020 0005            47              MOVE.B  #$20,CRA(A0)    ;reset the RxA
+0000005C  117C 0010 0005            48              MOVE.B  #$10,CRA(A0)    ;reset the MRA pointer
+00000062                            49      ;Channel B
+00000062                            50              ;MOVE.B  #$30,CRB(A0)    
+00000062                            51              ;MOVE.B  #$20,CRB(A0)
+00000062                            52              ;MOVE.B  #$10,CRB(A0)
+00000062                            53  ;Then, intiialize both channels
+00000062                            54      ;Channel A
+00000062  117C 0080 0009            55              MOVE.B  #$80,ACR(A0)    ;selects the baud rate set 2
+00000068  117C 00CC 0003            56              MOVE.B  #BAUD_RATE,CSRA(A0) ;sets to 19.2k baud for Tx/Rx
+0000006E  117C 0013 0001            57              MOVE.B  #$13,MR1A(A0)   ;8bits, no parity, 1 stop bit
+00000074                            58      ;Channel B
+00000074                            59              ;MOVE.B  #BAUD_RATE,CSRB(A0)
+00000074                            60              ;MOVE.B  #$13,MR1B(A0)
+00000074                            61              
+00000074  117C 0007 0001            62              MOVE.B  #$07,MR2A(A0) ;auto Echo with Stop Bit Length of 1
+0000007A                            63              ;MOVE.B  #$47,MR2B(A0)
+0000007A                            64              
+0000007A  117C 0005 0005            65              MOVE.B  #$05,CRA(A0) ;sets both Tx and Rx ready
+00000080                            66              ;MOVE.B  #$05,CRB(A0)
+00000080  4E75                      67              RTS
+00000082                            68              
+00000082  2F00                      69  CLEAR:      MOVE.L  D0, -(SP)
+Line 70 ERROR: Undefined symbol
+00000084  103C 0016                 70              MOVE.B  #NEWPAGE, D0
+00000088  6100 0076                 71              BSR PUTCHAR
+0000008C  201F                      72              MOVE.L  (SP)+, D0
+0000008E  4E75                      73              RTS
+00000090                            74              
+00000090  2F00                      75  OUTSPACE:   MOVE.L  D0, -(SP)
+Line 76 ERROR: Undefined symbol
+00000092  103C 0016                 76              MOVE.B  #SPACE, D0
+00000096  6100 0068                 77              BSR PUTCHAR
+0000009A  201F                      78              MOVE.L  (SP)+, D0
+0000009C  4E75                      79              RTS
+0000009E                            80              
+0000009E  2F00                      81  OUTNL:      MOVE.L  D0, -(SP)
+Line 82 ERROR: Undefined symbol
+000000A0  103C 0016                 82              MOVE.B  #CR, D0
+000000A4  6100 005A                 83              BSR PUTCHAR
+Line 84 ERROR: Undefined symbol
+000000A8  103C 0016                 84              MOVE.B  #LF, D0
+000000AC  6100 0052                 85              BSR PUTCHAR
+000000B0  201F                      86              MOVE.L  (SP)+, D0
+000000B2  4E75                      87              RTS  
+000000B4                            88              
+000000B4  4280                      89  CLEAR_ALL:  CLR.L   D0
+000000B6  4281                      90              CLR.L   D1
+000000B8  4282                      91              CLR.L   D2
+000000BA  4283                      92              CLR.L   D3
+000000BC  4284                      93              CLR.L   D4
+000000BE  4285                      94              CLR.L   D5
+000000C0  4286                      95              CLR.L   D6
+000000C2  4287                      96              CLR.L   D7
+000000C4  2040                      97              MOVE.L  D0,A0
+000000C6  2240                      98              MOVE.L  D0,A1
+000000C8  2440                      99              MOVE.L  D0,A2
+000000CA  2640                     100              MOVE.L  D0,A3
+000000CC  2840                     101              MOVE.L  D0,A4
+000000CE  2A40                     102              MOVE.L  D0,A5
+000000D0  2C40                     103              MOVE.L  D0,A6
+000000D2  48E7 FFFF                104              MOVEM.L A0-A7/D0-D7, -(SP)
+000000D6  3C3C 000E                105              MOVE.W  #14,D6
+000000DA  41F9 00100000            106              LEA     DATA+REG_F, A0
+000000E0  20DF                     107  .loop       MOVE.L  (SP)+, (A0)+
+000000E2  51CE FFFC                108              DBRA    D6,.loop
+000000E6  4E6A                     109              MOVE.L  USP, A2
+000000E8  20CA                     110              MOVE.L  A2, (A0)+
+000000EA  201F                     111              MOVE.L  (SP)+, D0
+000000EC  0480 0000000A            112              SUB.L   #10, D0
+000000F2  20C0                     113              MOVE.L  D0, (A0)+
+000000F4  30FC 2000                114              MOVE.W  #$2000, (A0)+
+000000F8  20FC 00101000            115              MOVE.L  #$101000, (A0)+
+000000FE  4E75                     116              RTS
+00000100                           117  
+00000100                           118  *--------------------------------
+00000100                           119  *     GENERAL UTILITY SUBROUTINES
+00000100                           120  *--------------------------------
+00000100  2F01                     121  PUTCHAR:    MOVE.L      D1,-(SP)
+00000102  2F00                     122              MOVE.L      D0,-(SP)
+00000104  1200                     123              MOVE.B      D0,D1
+00000106                 TRUE      124              IFNE SIM
+00000106  303C 0006                125              MOVE    #06,D0
+0000010A  4E4F                     126              TRAP    #15
+0000010C  6000 0014                127              BRA     .EXIT
+00000110                           128              ENDC
+Line 129 ERROR: Undefined symbol
+00000110  41F9 004DBD16            129              LEA     DUART,A0
+00000116  0828 0002 0003           130  .WAITA      BTST    #Tx_Rdy, SRA(A0)
+0000011C  67F8                     131              BEQ     .WAITA     
+0000011E                           132  ;.WAITB      BTST    #Tx_Rdy, SRB(A0)
+0000011E                           133  ;            BEQ     .WAITA
+0000011E                           134  ;.MOVEB      MOVE.B  D1,HRB(A0)
+0000011E                           135  ;            JSR     .EXIT
+0000011E  1141 0007                136  .MOVEA      MOVE.B  D1,HRA(A0)
+00000122  201F                     137  .EXIT       MOVE.L  (SP)+,D0
+00000124  221F                     138              MOVE.L  (SP)+,D1
+00000126  4E75                     139              RTS
+00000128                           140              
+00000128                           141  GETCHAR:
+00000128  2F01                     142      MOVE.L      D1,-(SP)
+0000012A  1200                     143      MOVE.B      D0,D1
+0000012C                 TRUE      144      IFNE SIM
+0000012C  103C 0005                145      MOVE.B      #5,D0
+00000130  4E4F                     146      TRAP        #15
+00000132  6000 000E                147      BRA         .EXIT
+00000136                           148      ENDC
+00000136  0828 0000 0003           149  .WAITA    BTST        #Rx_Rdy,SRA(A0)
+0000013C  67F8                     150            BEQ         .WAITA
+0000013E                           151  ;.WAITB    BTST        #Rx_Rdy,SRB(A0)
+0000013E                           152  ;          BEQ         .WAITA
+0000013E                           153  ;.GRABB    MOVE.B      HRB(A0),D1
+0000013E                           154  ;          JSR         .EXIT
+0000013E  1228 0007                155  .GRABA    MOVE.B      HRA(A0),D1
+00000142  1001                     156  .EXIT     MOVE.B      D1,D0
+00000144  221F                     157            MOVE.L      (SP)+,D1
+00000146  4E75                     158            RTS
+00000148                           159  
+00000148                           160  * PUTSTR: print string in memory. string terminated by $04 (ASCII End of Transmission)
+00000148                           161  * arguments: address of first character in D0
+00000148                           162  * return: no values
+00000148  2F00                     163  PUTSTR:     MOVE.L D0,-(SP) ; SAVE ON STACK. string pointer (argument)
+0000014A  2F01                     164              MOVE.L D1, -(SP) ; SAVE ON STACK. temp string pointer
+0000014C                           165              
+0000014C                           166              ;MOVE.L A1, D0 ; move address of the string to d0
+0000014C                           167              ;MOVE.L D0, D1 ; move pointer to d1 (since d0 needed to call PUTCHAR)
+0000014C  0240 0000                168              ANDI    #$00000000, D0
+00000150                           169              
+00000150  1019                     170  .1CHAR      MOVE.B (A1)+, D0 ; load character from string to d0
+00000152  0C40 0004                171              CMPI #$04, D0 ; char is $00?
+00000156  6700 0006                172              BEQ .PSTREXIT ; if yes, we're done
+0000015A  61A4                     173              BSR PUTCHAR ; print the character
+0000015C                           174              ;ADDI #$1, D1 ; move up pointer by 1
+0000015C  60F2                     175              BRA .1CHAR ; and repeat print
+0000015E                           176              
+0000015E  221F                     177  .PSTREXIT   MOVE.L (SP)+, D1 ; RESTORE FROM STACK. temp string pointer
+00000160  201F                     178              MOVE.L (SP)+, D0 ; RESTORE FROM STACK. string pointer (argument)
+00000162  4E75                     179              RTS
+00000164                           180  
+00000164                           181      
+00000164                           182  *---------------------------
+00000164                           183  *     OUTPUT SUBROUTINES
+00000164                           184  *
+00000164                           185  *     OUT1X = PRINT ONE HEXADECIMAL CHARACTER
+00000164                           186  *     OUT2X = PRINT TWO HEXADECIMAL CHARACTER
+00000164                           187  *     OUT4X = PRINT FOUR HEXADECIMAL CHARACTER
+00000164                           188  *     OUT8X = PRINT EIGHT HEXADECIMAL CHARACTER
+00000164                           189  *---------------------------
+00000164  1F00                     190  OUT1X:  MOVE.B  D0,-(SP)    ;
+00000166  C03C 000F                191          AND.B   #$0F,D0     ;
+0000016A  0600 0030                192          ADD.B   #$30,D0
+0000016E  B03C 0039                193          CMP.B   #$39,D0
+00000172  6302                     194          BLS.S   OUT1X1
+00000174  5E00                     195          ADD.B   #$07,D0
+00000176                           196          
+00000176  6188                     197  OUT1X1: BSR     PUTCHAR
+00000178  101F                     198          MOVE.B  (SP)+,D0
+0000017A  4E75                     199          RTS
+0000017C                           200          
+0000017C  E818                     201  OUT2X:  ROR.B   #4,D0
+0000017E  61E4                     202          BSR     OUT1X
+00000180  E918                     203          ROL.B   #4,D0
+00000182  60E0                     204          BRA     OUT1X
+00000184                           205          
+00000184  E058                     206  OUT4X:   ROR.W   #8,D0
+00000186  61F4                     207          BSR     OUT2X
+00000188  E158                     208          ROL.W   #8,D0
+0000018A  60F0                     209          BRA     OUT2X
+0000018C                           210          
+0000018C  4840                     211  OUT8X:   SWAP    D0
+0000018E  61F4                     212          BSR     OUT4X
+00000190  4840                     213          SWAP    D0
+00000192  60F0                     214          BRA     OUT4X
+00000194                           215   
+00000194                           216  *---------------------------
+00000194                           217  *     INPUT SUBROUTINES
+00000194                           218  *
+00000194                           219  *   HEX = GET ONE HEX CHARACTER INTO D0
+00000194                           220  *   BYTE = GET TWO HEX CHARACTERS INTO D0
+00000194                           221  *   WORD = GET FOUR WORD HEX CHARACTERS INTO D0
+00000194                           222  *   LONGWD = GET A LONGWORD FROM THE LINE BUFFER INTO D0
+00000194                           223  *   Keep in mind Bit 0 of D7 is set to indicate a hexadecimal input error
+00000194                           224  *---------------------------
+00000194  6192                     225  HEX:    BSR     GETCHAR
+00000196  0400 0030                226          SUB.B   #$30,D0
+0000019A  6B0E                     227          BMI.S   .NOT_HEX
+0000019C  B03C 0009                228          CMP.B   #$09,D0
+000001A0  6F0C                     229          BLE.S   .HEX_OK
+000001A2  5F00                     230          SUB.B   #$07,D0
+000001A4  B03C 000F                231          CMP.B   #$0F,D0
+000001A8  6F04                     232          BLE.S   .HEX_OK
+000001AA                           233          
+000001AA  8E3C 0001                234  .NOT_HEX OR.B    #1,D7
+000001AE                           235  
+000001AE  6100 FF50                236  .HEX_OK BSR PUTCHAR 
+000001B2  4E75                     237          RTS
+000001B4                           238  
+000001B4  2F01                     239  BYTE:   MOVE.L  D1,-(SP)
+000001B6  61DC                     240          BSR     HEX
+000001B8  E900                     241          ASL.B   #4,D0
+000001BA  1200                     242          MOVE.B  D0,D1
+000001BC  61D6                     243          BSR     HEX
+000001BE  D001                     244          ADD.B   D1,D0
+000001C0  221F                     245          MOVE.L  (SP)+,D1
+000001C2  4E75                     246          RTS
+000001C4                           247  
+000001C4  61EE                     248  WORD:    BSR     BYTE
+000001C6  E140                     249          ASL.W   #8,D0
+000001C8  60EA                     250          BRA     BYTE
+000001CA                           251          
+000001CA  61F8                     252  LONGWD:  BSR     WORD
+000001CC  4840                     253          SWAP    D0
+000001CE  60F4                     254          BRA     WORD
+Line 255 WARNING: END directive missing, starting address not set
 
-No errors detected
+6 errors detected
 1 warning generated
 
 
@@ -221,56 +273,56 @@ Symbol-name         Value
 -------------------------
 ACR                 9
 BAUD_RATE           CC
-BYTE                13A
+BYTE                1B4
+CLEAR               82
+CLEAR_ALL           B4
+CLEAR_ALL:LOOP      E0
 CRA                 5
 CRB                 15
 CSRA                3
 CSRB                13
 CTL                 F
 CTU                 D
-DATA                10000
-DUART               20000
-GETCHAR             9C
-GETCHAR:EXIT        CC
-GETCHAR:GRABA       C8
-GETCHAR:GRABB       BE
-GETCHAR:WAITA       AC
-GETCHAR:WAITB       B6
-HEX                 11C
-HEX_OK              138
+DATA                100000
+GETCHAR             128
+GETCHAR:EXIT        142
+GETCHAR:GRABA       13E
+GETCHAR:WAITA       136
+HEX                 194
+HEX:HEX_OK          1AE
+HEX:NOT_HEX         1AA
 HRA                 7
 HRB                 17
-INIT_DUART          0
-LONGWD              150
+INIT_DUART          4A
+LONGWD              1CA
 MR1A                1
 MR1B                11
 MR2A                1
 MR2B                11
 MRRST               10
-NOT_HEX             134
-OUT1X               EA
-OUT1X1              FC
-OUT2X               104
-OUT4X               10C
-OUT8X               114
-PUTCHAR             60
-PUTCHAR:EXIT        96
-PUTCHAR:MOVEA       92
-PUTCHAR:MOVEB       88
-PUTCHAR:WAITA       76
-PUTCHAR:WAITB       80
-PUTSTR              CE
-PUTSTR:1CHAR        D4
-PUTSTR:PSTREXIT     E4
+OUT1X               164
+OUT1X1              176
+OUT2X               17C
+OUT4X               184
+OUT8X               18C
+OUTNL               9E
+OUTSPACE            90
+PUTCHAR             100
+PUTCHAR:EXIT        122
+PUTCHAR:MOVEA       11E
+PUTCHAR:WAITA       116
+PUTSTR              148
+PUTSTR:1CHAR        150
+PUTSTR:PSTREXIT     15E
+REG_F               0
 RXDS                2
 RXEN                1
 RXRST               20
 RX_RDY              0
-SIM                 1
 SRA                 3
 SRB                 13
 TXDS                8
 TXEN                4
 TXRST               30
 TX_RDY              2
-WORD                14A
+WORD                1C4
