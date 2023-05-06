@@ -9,7 +9,7 @@
   - Writing into 68K registers
   - Reading into ROM and RAM memory
   - Writing into RAM memory
-  - Loading and Running [SREC files](https://en.wikipedia.org/wiki/SREC_(file_format))(For now, they load files using 16 and 24 bit addresses)
+  - Loading and Running [SREC files](https://en.wikipedia.org/wiki/SREC_(file_format)) (For now, they load files using 16 and 24 bit addresses)
 ## Future Plans
 - Cleaning up and debugging commands
   * Fixing word writing issue
